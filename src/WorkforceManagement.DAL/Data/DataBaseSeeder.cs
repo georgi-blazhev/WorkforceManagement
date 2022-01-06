@@ -56,6 +56,7 @@ namespace WorkforceDataBase.DAL.Data
                     context.Users.Add(admin);
 
                     context.UserRoles.Add(identityUserRole);
+                    context.SaveChanges();
                 }
 
             }
