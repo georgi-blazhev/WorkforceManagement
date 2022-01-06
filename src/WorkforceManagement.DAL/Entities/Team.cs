@@ -10,7 +10,7 @@ namespace WorkforceManagement.DAL.Entities
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public User TeamLeader { get; set; }
+        public virtual User TeamLeader { get; set; }
         public string TeamLeaderId { get; set; }
         public virtual List<User> Members { get; set; }
     }
