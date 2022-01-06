@@ -13,6 +13,7 @@ namespace WorkforceManagement.DAL.Entities
         public DateTime EndDate { get; set; }
         public string Reason { get; set; }
         public Status Status { get; set; }
+        public virtual List<User> Approvers { get; set; }
     }
 
     public enum TimeOffRequestType

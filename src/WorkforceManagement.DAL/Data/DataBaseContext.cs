@@ -23,6 +23,12 @@ namespace WorkforceManagement.DAL.Data
             modelBuilder.Entity<Team>().HasMany(t => t.Members).WithMany(o => o.Teams);
             modelBuilder.Entity<Team>().HasOne(t => t.TeamLeader);
             modelBuilder.Entity<Team>().HasOne(t => t.Creator);
+            modelBuilder.Entity<TimeOffRequest>().HasMany(t => t.Approvers).WithMany(t => t.RequestsRequiringDecision)
+                .UsingEntity<UserTimeOffRequest>(ut => ut.HasOne<User>().WithMany(),
+                ut => ut.HasOne<TimeOffRequest>().WithMany())
+                .Property(ut => ut.Decision);
+            modelBuilder.Entity<TimeOffRequest>().HasOne(t => t.Creator);
+            modelBuilder.Entity<User>().HasMany(u => u.MyRequests);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
