@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.WEB", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.DAL", "..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj", "{DD0EA776-588E-40A5-912C-8920807E7F6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagement.BLL", "..\WorkforeManagement.BLL\WorkforceManagement.BLL.csproj", "{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL", "..\WorkforeManagement.BLL\WorkforceManagement.BLL.csproj", "{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{858ABE1C-4F85-41CA-9740-DD5E548C024D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagment.BLL.UnitTests", "..\WorkforceManagment.BLL.UnitTests\WorkforceManagment.BLL.UnitTests.csproj", "{DBDECA93-8FE3-4D78-BEC8-92046197668C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +31,16 @@ Global
 		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DBDECA93-8FE3-4D78-BEC8-92046197668C} = {858ABE1C-4F85-41CA-9740-DD5E548C024D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C55EF02B-4352-4278-BCFD-F9239D2FDB9A}
