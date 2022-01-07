@@ -18,6 +18,8 @@ using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.BLL.Services;
 using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
+using WorkforceManagement.DAL.IRepositories;
+using WorkforceManagement.DAL.Repositories;
 
 namespace WorkforceManagement.WEB
 {
@@ -50,10 +52,11 @@ namespace WorkforceManagement.WEB
                     .AddEntityFrameworkStores<DatabaseContext>();
 
 
-            //BLL
+            // Register Service implementations
             services.AddTransient<IUserManager, WorkforceUserManager>();
 
-
+            // Register Repository implementations
+            services.AddTransient<TeamRepository, TeamRepository>();
 
             services.AddSwaggerGen(c =>
             {
