@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj" />
   </ItemGroup>
 

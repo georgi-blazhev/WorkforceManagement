@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WorkforceDataBase.DAL.Data;
 using WorkforceManagement.DAL.Data;
 
 namespace WorkforceManagement.WEB
@@ -36,7 +35,7 @@ namespace WorkforceManagement.WEB
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkforceManagement.WEB", Version = "v1" });
             });
 
-            services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Connex"]));
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Connex"]));
 
         }
 
@@ -44,7 +43,7 @@ namespace WorkforceManagement.WEB
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
            
-            DataBaseSeeder.Seed(app.ApplicationServices);
+            DatabaseSeeder.Seed(app.ApplicationServices);
 
 
             if (env.IsDevelopment())
