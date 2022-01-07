@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
 
-namespace WorkforceDataBase.DAL.Data
+namespace WorkforceManagement.DAL.Data
 {
-     public class DataBaseSeeder
+     public class DatabaseSeeder
     {
         public static void Seed(IServiceProvider applicationServices)
         {
             using (IServiceScope serviceScope = applicationServices.CreateScope())
             {
-                DataBaseContext context = serviceScope.ServiceProvider.GetRequiredService<DataBaseContext>();
+                DatabaseContext context = serviceScope.ServiceProvider.GetRequiredService<DatabaseContext>();
                 if (context.Database.EnsureCreated())
                 {
                     PasswordHasher<User> hasher = new PasswordHasher<User>();

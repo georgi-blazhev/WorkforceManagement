@@ -9,7 +9,7 @@ namespace WorkforceManagement.DAL.Entities
     public class UserTimeOffRequest
     {
         public string ApproverId { get; set; }
-        public string TimeOffRequestId { get; set; }
+        public Guid TimeOffRequestId { get; set; }
         public string Decision { get; set; }
     }
 }

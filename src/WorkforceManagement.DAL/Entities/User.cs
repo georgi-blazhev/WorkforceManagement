@@ -13,7 +13,6 @@ namespace WorkforceManagement.DAL.Entities
         public string LastName { get; set; }
         public DateTime CreatedAt { get; set; }
         public virtual List<Team> Teams { get; set; }
-        public virtual List<TimeOffRequest> MyRequests { get; set; }
         public virtual List<TimeOffRequest> RequestsRequiringDecision { get; set; }
     }
 }
