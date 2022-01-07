@@ -20,6 +20,7 @@ using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagement.DAL.IRepositories;
 using WorkforceManagement.DAL.Repositories;
+using WorkforceManagement.WEB.Middleware;
 
 namespace WorkforceManagement.WEB
 {
@@ -135,8 +136,11 @@ namespace WorkforceManagement.WEB
 
             app.UseRouting();
 
+            app.UseMiddleware<GlobalErrorHandler>();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

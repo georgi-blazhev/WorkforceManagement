@@ -22,8 +22,4 @@
     <ProjectReference Include="..\WorkforeManagement.BLL\WorkforceManagement.BLL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AuthorizationPolicies\" />
-  </ItemGroup>
-
 </Project>
