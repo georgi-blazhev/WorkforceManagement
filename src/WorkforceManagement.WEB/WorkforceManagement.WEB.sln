@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.WEB", "WorkforceManagement.WEB.csproj", "{3CE67B04-73D6-45D1-87CD-4C2C10AA3B1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagement.DAL", "..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj", "{DD0EA776-588E-40A5-912C-8920807E7F6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.DAL", "..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj", "{DD0EA776-588E-40A5-912C-8920807E7F6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagement.BLL", "..\WorkforeManagement.BLL\WorkforceManagement.BLL.csproj", "{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DD0EA776-588E-40A5-912C-8920807E7F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD0EA776-588E-40A5-912C-8920807E7F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD0EA776-588E-40A5-912C-8920807E7F6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
