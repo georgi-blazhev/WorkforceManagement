@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkforceManagement.BLL.IServices;
+using WorkforceManagement.BLL.Services;
 using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
 
@@ -45,6 +48,12 @@ namespace WorkforceManagement.WEB
             })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<DatabaseContext>();
+
+
+            //BLL
+            services.AddTransient<IUserManager, WorkforceUserManager>();
+
+
 
             services.AddSwaggerGen(c =>
             {
@@ -79,8 +88,29 @@ namespace WorkforceManagement.WEB
                 });
             });
 
+            var builder = services.AddIdentityServer((options) =>
+            {
+                options.EmitStaticAudienceClaim = true;
+            })
+                                  .AddInMemoryApiScopes(IdentityConfig.ApiScopes)
+                                  .AddInMemoryClients(IdentityConfig.Clients);
+
+            builder.AddDeveloperSigningCredential();
+            builder.AddResourceOwnerValidator<PasswordValidator>();
 
 
+            services.AddAuthorization()
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://localhost:5001";
+                    options.Audience = "https://localhost:5001/resources";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,11 +125,14 @@ namespace WorkforceManagement.WEB
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkforceManagement.WEB v1"));
             }
-            
+
+            app.UseIdentityServer();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
