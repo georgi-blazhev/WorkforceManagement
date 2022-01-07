@@ -14,7 +14,7 @@ namespace WorkforceManagement.WEB
             {
                 new Client
                 {
-                    ClientId = "projectmanagement",
+                    ClientId = "workforce",
                     AllowOfflineAccess = true,
 
                     // no interactive user, use the clientid/secret for authentication
@@ -26,7 +26,7 @@ namespace WorkforceManagement.WEB
                         new Secret("secret".Sha256())
                     },
                     // scopes that client has access to
-                    AllowedScopes = { "users", "offline_access", "projectmanagement" , "roles" }
+                    AllowedScopes = { "users", "offline_access", "workforce" , "roles" }
                 }
             };
 
@@ -42,7 +42,7 @@ namespace WorkforceManagement.WEB
             {
                     new ApiScope("users", "My API", new string[]{ ClaimTypes.Name, ClaimTypes.Role }),
                     new ApiScope("offline_access", "RefereshToken"),
-                    new ApiScope("projectmanagement", "app")
+                    new ApiScope("workforce", "app")
             };
     }
 }

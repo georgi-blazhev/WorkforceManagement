@@ -48,9 +48,9 @@ namespace WorkforceManagement.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task<User> FindByUserNameAsync(string userName)
+        public async Task<User> FindByUserNameAsync(string userName)
         {
-            throw new NotImplementedException();
+            return await FindByNameAsync(userName);
         }
 
         public Task<List<User>> GetAllAsync()
@@ -58,9 +58,9 @@ namespace WorkforceManagement.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<string>> GetUserRolesAsync(User user)
+        public async Task<List<string>> GetUserRolesAsync(User user)
         {
-            throw new NotImplementedException();
+            return (await GetRolesAsync(user)).ToList();
         }
 
         public async Task<bool> ValidateUserCredentials(string userName, string password)
