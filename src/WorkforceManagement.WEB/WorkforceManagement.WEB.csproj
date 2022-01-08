@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj" />
+    <ProjectReference Include="..\WorkforceManagment.Models\WorkforceManagment.Models.csproj" />
     <ProjectReference Include="..\WorkforeManagement.BLL\WorkforceManagement.BLL.csproj" />
   </ItemGroup>
 

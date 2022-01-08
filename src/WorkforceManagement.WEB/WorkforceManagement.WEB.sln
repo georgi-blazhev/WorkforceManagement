@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{858ABE1C-4F85-41CA-9740-DD5E548C024D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagment.BLL.UnitTests", "..\WorkforceManagment.BLL.UnitTests\WorkforceManagment.BLL.UnitTests.csproj", "{DBDECA93-8FE3-4D78-BEC8-92046197668C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagment.BLL.UnitTests", "..\WorkforceManagment.BLL.UnitTests\WorkforceManagment.BLL.UnitTests.csproj", "{DBDECA93-8FE3-4D78-BEC8-92046197668C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagment.Models", "..\WorkforceManagment.Models\WorkforceManagment.Models.csproj", "{2D217EA3-FA58-4B57-A612-17D1BDD550BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBDECA93-8FE3-4D78-BEC8-92046197668C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

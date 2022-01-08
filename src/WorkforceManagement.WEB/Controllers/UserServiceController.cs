@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
+using WorkforceManagement.DAL.Entities;
+using WorkforceManagment.Models.DTO.Requests.UserRequests;
+using WorkforceManagment.Models.DTO.Responses;
 
 namespace WorkforceManagement.WEB.Controllers
 {
@@ -19,46 +22,49 @@ namespace WorkforceManagement.WEB.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        [Route("/create")]
-        public async Task Create(CreateUser user)
-        {
-            await _userService.CreateUser(user.UserName, user.Password, user.FirstName, user.LastName, user.Role);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpDelete]
-        [Route("/delete/{userName}")]
-        public async Task Delete(string userName)
-        {
-            await _userService.DeleteUserAsync(userName);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPut]
-        [Route("/edit/{userName}")]
-        public async Task Edit(EditUser user, string userName)
-        {
-            await _userService.UpdateUserAsync(userName, user.NewUserName, user.Password, user.FirstName, user.LastName);
-        }
-
         [Authorize]
         [HttpGet]
         public async Task<List<UserResponse>> AllUsers()
         {
-            List<User> users = await _userService.GetAll();
-            List<UserResponse> all = new List<UserResponse>();
+            List<User> users = await _userService.GetAllUsersAsync();
+            List<UserResponse> result = new();
             foreach (var user in users)
             {
-                all.Add(new UserResponse()
+                result.Add(new UserResponse()
                 {
                     UserName = user.UserName,
+                    Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName
                 });
             }
-            return all;
+            return result;
+        }
+
+        // TODO: Add log-in controller
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("/create")]
+        public async Task Register(CreateUserModel model)
+        {
+            await _userService.CreateUserAsync(model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("/edit/{userId}")]
+        public async Task Edit(EditUserModel model, string userId)
+        {
+            await _userService.EditUserAsync(userId, model.NewUserName, model.Email, model.CurrentPassword, model.NewPassword, model.FirstName, model.LastName);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("/delete/{userId}")]
+        public async Task Delete(string userId)
+        {
+            await _userService.DeleteUserAsync(userId);
         }
     }
 
