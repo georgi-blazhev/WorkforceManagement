@@ -74,9 +74,19 @@ namespace WorkforceManagement.BLL.Services
             return false;
         }
 
-        Task<IdentityResult> IUserManager.UpdateUserAsync(User user)
+        public async Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            await ChangePasswordAsync(user, currentPassword, newPassword);
+            await UpdateAsync(user);
+            return user;
+        }
+        public void AssignUserToTeam(User user, Team team)
+        {
+            user.Teams.Add(team);
+        }
+        public void UnassignUserToTeam(User user, Team team)
+        {
+            user.Teams.Remove(team);
         }
     }
 }

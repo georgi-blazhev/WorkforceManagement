@@ -53,5 +53,9 @@ namespace WorkforceManagement.DAL.Repositories
         {
             _entities.RemoveRange(entities);
         }
+        public async Task SaveChangesAsync()
+        {
+            await _dataContext.SaveChangesAsync();
+        }
     }
 }

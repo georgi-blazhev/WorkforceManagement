@@ -5,15 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
+using WorkforceManagement.DAL.IRepositories;
 
 namespace WorkforceManagement.BLL.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
-        public UserService(IUserManager userManager)
+        private readonly ITeamRepository _teamRepository;
+        public UserService(IUserManager userManager, ITeamRepository teamRepository)
         {
             _userManager = userManager;
+            _teamRepository = teamRepository;
         }
         public async Task<User> GetUserByIdAsync(string userId)
         {
@@ -21,7 +24,7 @@ namespace WorkforceManagement.BLL.Services
         }
         public async Task<User> GetUserByNameAsync(string userName)
         {
-            return await _userManager.FindByNameAsync(userName);
+            return await _userManager.FindByUserNameAsync(userName);
         }
         public async Task<List<User>> GetAllUsersAsync()
         {
@@ -31,60 +34,55 @@ namespace WorkforceManagement.BLL.Services
         {
             return await _userManager.GetUserRolesAsync(user);
         }
-        public async Task<bool> CreateUserAsync(string userName, string passWord, string firstName, string lastName, Role role, string teamId)
+        public async Task<bool> CreateUserAsync(string userName, string eMail, string passWord, string firstName, string lastName, Role role)
         {
-            if (await _userManager.FindByNameAsync(userName) != null) return false;
-
-            var team = _uow.TeamRepository.FindById(teamId);
+            if (await _userManager.FindByUserNameAsync(userName) != null) return false;
 
             User newUser = new()
             {
                 UserName = userName,
+                Email = eMail,
                 FirstName = firstName,
                 LastName = lastName
             };
 
             await _userManager.CreateUserAsync(newUser, passWord);
-            newUser.Teams.Add(team);
-            _uow.SaveChanges();
-
             AddUserToRoleAsync(newUser, role);
             return true;
         }
-        public async Task<User> EditUserAsync(string userId, string userName, string currentPassword, string newPassword, string firstName, string lastName)
+        public async Task<User> EditUserAsync(string userId, string userName, string eMail, string currentPassword, string newPassword, string firstName, string lastName)
         {
             User userToBeEdited = await _userManager.FindByIdAsync(userId);
 
             userToBeEdited.UserName = userName;
             userToBeEdited.FirstName = firstName;
             userToBeEdited.LastName = lastName;
+            userToBeEdited.Email = eMail;
 
             return await _userManager.UpdateUserAsync(userToBeEdited, currentPassword, newPassword);
         }
-        public async System.Threading.Tasks.Task DeleteUserAsync(string userId)
+        public async Task DeleteUserAsync(string userId)
         {
             var userToBeDeleted = await _userManager.FindByIdAsync(userId);
-
-            _uow.WorkLogRepository.DeleteCollection(userToBeDeleted.WorkLogs);
-            _uow.SaveChanges();
+            // TODO: Delete related information such as TimeOffRequests
             await _userManager.DeleteUserAsync(userToBeDeleted);
         }
         public async Task<bool> AssignUserToTeamAsync(string userId, string teamId)
         {
             User user = await _userManager.FindByIdAsync(userId);
-            Team team = _uow.TeamRepository.FindById(teamId);
+            Team team = await _teamRepository.FindByIdAsync(teamId);
 
             _userManager.AssignUserToTeam(user, team);
-            _uow.SaveChanges();
+            await _teamRepository.SaveChangesAsync();
             return true;
         }
         public async Task<bool> UnassignUserToTeamAsync(string userId, string teamId)
         {
             User user = await _userManager.FindByIdAsync(userId);
-            Team team = _uow.TeamRepository.FindById(teamId);
+            Team team = await _teamRepository.FindByIdAsync(teamId);
 
             _userManager.UnassignUserToTeam(user, team);
-            _uow.SaveChanges();
+            await _teamRepository.SaveChangesAsync();
             return true;
         }
 
