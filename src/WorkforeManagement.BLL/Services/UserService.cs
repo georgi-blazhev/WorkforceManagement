@@ -92,10 +92,6 @@ namespace WorkforceManagement.BLL.Services
             {
                 await _userManager.AddToRoleAsync(user, "Admin");
             }
-            else if (role == Role.Manager)
-            {
-                await _userManager.AddToRoleAsync(user, "Manager");
-            }
             else
             {
                 await _userManager.AddToRoleAsync(user, "Regular");

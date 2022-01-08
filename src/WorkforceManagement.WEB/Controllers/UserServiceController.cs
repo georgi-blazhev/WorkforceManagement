@@ -22,8 +22,8 @@ namespace WorkforceManagement.WEB.Controllers
             _userService = userService;
         }
 
-        [Authorize]
         [HttpGet]
+        [Route("All")]
         public async Task<List<UserResponse>> AllUsers()
         {
             List<User> users = await _userService.GetAllUsersAsync();
@@ -45,23 +45,20 @@ namespace WorkforceManagement.WEB.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        [Route("/create")]
         public async Task Register(CreateUserModel model)
         {
             await _userService.CreateUserAsync(model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
         }
 
+        [HttpPut("{userId}")]
         [Authorize(Roles = "Admin")]
-        [HttpPut]
-        [Route("/edit/{userId}")]
         public async Task Edit(EditUserModel model, string userId)
         {
             await _userService.EditUserAsync(userId, model.NewUserName, model.Email, model.CurrentPassword, model.NewPassword, model.FirstName, model.LastName);
         }
 
+        [HttpDelete("{userId}")]
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
-        [Route("/delete/{userId}")]
         public async Task Delete(string userId)
         {
             await _userService.DeleteUserAsync(userId);

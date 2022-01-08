@@ -18,7 +18,6 @@ namespace WorkforceManagement.DAL.Entities
     public enum Role
     {
         Admin = 1,
-        Manager = 2,
-        Regular = 3
+        Regular = 2
     }
 }
