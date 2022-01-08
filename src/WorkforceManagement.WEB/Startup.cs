@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.Text;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.BLL.Services;
 using WorkforceManagement.DAL.Data;
@@ -33,7 +35,7 @@ namespace WorkforceManagement.WEB
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Connex"]));
 
             services.AddControllers();
-            
+
 
             // EF Identity
             services.AddIdentityCore<User>(options =>
@@ -110,6 +112,21 @@ namespace WorkforceManagement.WEB
                     options.Authority = "https://localhost:5001";
                     options.Audience = "https://localhost:5001/resources";
                 });
+
+            /*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

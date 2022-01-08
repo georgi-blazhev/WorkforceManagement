@@ -18,5 +18,6 @@ namespace WorkforceManagement.BLL.IServices
         Task DeleteUserAsync(string userId);
         Task<bool> AssignUserToTeamAsync(string userId, string teamId);
         Task<bool> UnassignUserToTeamAsync(string userId, string teamId);
+        Task<User> GetUserByUsernameAndPassword(string userName, string password);
     }
 }

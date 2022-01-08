@@ -87,6 +87,16 @@ namespace WorkforceManagement.BLL.Services
             return true;
         }
 
+        public async Task<User> GetUserByUsernameAndPassword(string userName, string password)
+        {
+            bool credentialsAreValid = await _userManager.ValidateUserCredentialsAsync(userName, password);
+            if (credentialsAreValid)
+            {
+                return await _userManager.FindByUserNameAsync(userName);
+            }
+            return null;
+        }
+
         public async Task AddUserToRoleAsync(User user, Role role)
         {
             if (role == Role.Admin)

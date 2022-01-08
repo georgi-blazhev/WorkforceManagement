@@ -12,7 +12,7 @@ namespace WorkforceManagment.Models.DTO.Requests.UserRequests
         [Required]
         [MinLength(5)]
         [MaxLength(50)]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [MinLength(8)]

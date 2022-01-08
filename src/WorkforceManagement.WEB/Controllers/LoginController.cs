@@ -1,32 +1,36 @@
-﻿using Castle.Core.Configuration;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagment.Models.DTO.Requests.UserRequests;
+using Microsoft.Extensions.Configuration;
 
 namespace WorkforceManagement.WEB.Controllers
 {
+    [Route("api/login")]
+    [ApiController]
     public class LoginController : Controller
     {
         private IConfiguration _config;
+        private readonly IUserService _userService;
 
-        public LoginController(IConfiguration config)
+        public LoginController(IConfiguration config, IUserService userService)
         {
             _config = config;
+            _userService = userService;
         }
+
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login([FromBody] LoginUserModel login)
+        public async Task<IActionResult> Login([FromBody] LoginUserModel login)
         {
             IActionResult response = Unauthorized();
-            var user = AuthenticateUser(login);
+            var user = await AuthenticateUser(login);
 
             if (user != null)
             {
@@ -51,10 +55,14 @@ namespace WorkforceManagement.WEB.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private LoginUserModel AuthenticateUser(LoginUserModel login)
+        private async Task<LoginUserModel> AuthenticateUser(LoginUserModel model)
         {
-            LoginUserModel model = null;
-            return  _userService.GetUserByUsernameAndPassword(model.UserName, model.Password);
+            LoginUserModel modelUser = new();
+            User user = await _userService.GetUserByUsernameAndPassword(model.Username, model.Password);
+            if (user == null) return null;
+            modelUser.Username = model.Username;
+            modelUser.Password = model.Password;
+            return modelUser;
         }
     }
 }

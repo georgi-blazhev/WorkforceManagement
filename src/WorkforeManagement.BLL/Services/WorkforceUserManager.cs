@@ -64,7 +64,7 @@ namespace WorkforceManagement.BLL.Services
         {
             await DeleteAsync(user);
         }
-        public async Task<bool> ValidateUserCredentials(string userName, string password)
+        public async Task<bool> ValidateUserCredentialsAsync(string userName, string password)
         {
             User user = await FindByNameAsync(userName);
             if (user != null)

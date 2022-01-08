@@ -26,7 +26,7 @@ namespace WorkforceManagement.WEB
 
             if (user != null)
             {
-                bool authResult = await _userManager.ValidateUserCredentials(context.UserName, context.Password);
+                bool authResult = await _userManager.ValidateUserCredentialsAsync(context.UserName, context.Password);
                 if (authResult)
                 {
                     List<string> roles = await _userManager.GetUserRolesAsync(user);
