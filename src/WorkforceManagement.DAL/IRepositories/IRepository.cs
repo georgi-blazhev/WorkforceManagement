@@ -10,10 +10,10 @@ namespace WorkforceManagement.DAL.IRepositories
 {
     public interface IRepository<TEntity> where TEntity : AbstractEntity
     {
-        TEntity FindById(string id);
+        Task<TEntity> FindByIdAsync(string id);
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
         Task<List<TEntity>> GetAllAsync();
-        void Create(TEntity entity);
+        void CreateAsync(TEntity entity);
         TEntity Edit(TEntity entity);
         void Delete(TEntity entity);
         void DeleteCollection(IEnumerable<TEntity> entities);

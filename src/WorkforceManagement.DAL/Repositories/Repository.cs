@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
@@ -22,9 +21,9 @@ namespace WorkforceManagement.DAL.Repositories
             _entities = _dataContext.Set<TEntity>();
         }
 
-        public TEntity FindById(string id)
+        public async Task<TEntity> FindByIdAsync(string id)
         {
-            TEntity entity = _entities.Find(Guid.Parse(id));
+            TEntity entity = await _entities.FindAsync(Guid.Parse(id));
             if (entity != null) return entity;
             throw new KeyNotFoundException($"An entity with the given ID does not exist!");
         }
@@ -38,9 +37,13 @@ namespace WorkforceManagement.DAL.Repositories
         {
             return await _entities.ToListAsync();
         }
-        public void Create(TEntity entity)
+        public async void CreateAsync(TEntity entity)
         {
-            _entities.Add(entity);
+            await _entities.AddAsync(entity);
+        }
+        public virtual TEntity Edit(TEntity entity)
+        {
+            return _entities.Update(entity).Entity;
         }
         public void Delete(TEntity entity)
         {
@@ -49,10 +52,6 @@ namespace WorkforceManagement.DAL.Repositories
         public void DeleteCollection(IEnumerable<TEntity> entities)
         {
             _entities.RemoveRange(entities);
-        }
-        public virtual TEntity Edit(TEntity entity)
-        {
-            return _entities.Update(entity).Entity;
         }
     }
 }
