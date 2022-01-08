@@ -67,7 +67,7 @@ namespace WorkforceManagement.BLL.Services
             var userToBeDeleted = await _userManager.FindByIdAsync(userId);
             // TODO: Delete related information such as TimeOffRequests
             await _userManager.DeleteUserAsync(userToBeDeleted);
-        }
+        }   
         public async Task<bool> AssignUserToTeamAsync(string userId, string teamId)
         {
             User user = await _userManager.FindByIdAsync(userId);
