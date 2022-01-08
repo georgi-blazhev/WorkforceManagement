@@ -43,11 +43,12 @@ namespace WorkforceManagement.BLL.Services
                 UserName = userName,
                 Email = eMail,
                 FirstName = firstName,
-                LastName = lastName
+                LastName = lastName,
+                CreatedAt = DateTime.Now
             };
 
             await _userManager.CreateUserAsync(newUser, passWord);
-            AddUserToRoleAsync(newUser, role);
+            await AddUserToRoleAsync(newUser, role);
             return true;
         }
         public async Task<User> EditUserAsync(string userId, string userName, string eMail, string currentPassword, string newPassword, string firstName, string lastName)
@@ -86,7 +87,7 @@ namespace WorkforceManagement.BLL.Services
             return true;
         }
 
-        public async void AddUserToRoleAsync(User user, Role role)
+        public async Task AddUserToRoleAsync(User user, Role role)
         {
             if (role == Role.Admin)
             {

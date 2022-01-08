@@ -28,6 +28,7 @@ namespace WorkforceManagment.Models.DTO.Requests.UserRequests
         [MinLength(8)]
         public string RepeatPassword { get; set; }
 
+        // TODO: What is up with this method? lol
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> result = new List<ValidationResult>();

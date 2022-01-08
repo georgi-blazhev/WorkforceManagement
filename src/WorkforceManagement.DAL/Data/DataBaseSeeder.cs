@@ -29,7 +29,10 @@ namespace WorkforceManagement.DAL.Data
                         EmailConfirmed = true,
                         UserName = "admin",
                         NormalizedUserName = "admin".ToUpper(),
-                        SecurityStamp = Guid.NewGuid().ToString("D")
+                        SecurityStamp = Guid.NewGuid().ToString("D"),
+                        FirstName = "Admin",
+                        LastName = "Adminov",
+                        CreatedAt = DateTime.Now
                     };
                     admin.PasswordHash = hasher.HashPassword(admin, "adminpass");
 
