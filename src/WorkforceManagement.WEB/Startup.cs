@@ -12,6 +12,7 @@ using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.BLL.Services;
 using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
+using WorkforceManagement.DAL.IRepositories;
 using WorkforceManagement.DAL.Repositories;
 using WorkforceManagement.WEB.Middleware;
 
@@ -48,9 +49,10 @@ namespace WorkforceManagement.WEB
 
             // Register Service implementations
             services.AddTransient<IUserManager, WorkforceUserManager>();
+            services.AddTransient<IUserService, UserService>();
 
             // Register Repository implementations
-            services.AddTransient<TeamRepository, TeamRepository>();
+            services.AddTransient<ITeamRepository, TeamRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -133,7 +135,6 @@ namespace WorkforceManagement.WEB
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WorkforceManagement.DAL.Entities;
+
+namespace WorkforceManagement.BLL.IServices
+{
+    public interface IUserService
+    {
+        Task<User> GetUserByIdAsync(string userId);
+        Task<User> GetUserByNameAsync(string name);
+        Task<List<User>> GetAllUsersAsync();
+        Task<List<string>> GetRolesAsync(User user);
+        Task<bool> CreateUserAsync(string userName, string passWord, string firstName, string lastName, Role role, string teamId);
+        Task<User> EditUserAsync(string userId, string userName, string currentPassword, string newPassword, string firstName, string lastName);
+        System.Threading.Tasks.Task DeleteUserAsync(string userId);
+        Task<bool> AssignUserToTeamAsync(string userId, string teamId);
+        Task<bool> UnassignUserToTeamAsync(string userId, string teamId);
+    }
+}
