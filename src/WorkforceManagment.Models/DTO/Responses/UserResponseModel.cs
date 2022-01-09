@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorkforceManagment.Models.DTO.Responses
 {
-    public class UserResponse
+    public class UserResponseModel
     {
         public string UserName { get; set; }
         public string Email { get; set; }

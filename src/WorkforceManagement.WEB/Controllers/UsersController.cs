@@ -24,13 +24,13 @@ namespace WorkforceManagement.WEB.Controllers
 
         [HttpGet]
         [Route("All")]
-        public async Task<List<UserResponse>> AllUsers()
+        public async Task<List<UserResponseModel>> AllUsers()
         {
             List<User> users = await _userService.GetAllUsersAsync();
-            List<UserResponse> result = new();
+            List<UserResponseModel> result = new();
             foreach (var user in users)
             {
-                result.Add(new UserResponse()
+                result.Add(new UserResponseModel()
                 {
                     UserName = user.UserName,
                     Email = user.Email,

@@ -9,6 +9,14 @@ using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagment.Models.DTO.Requests.UserRequests;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+using WorkforceManagment.Models.DTO.Responses;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.Resource;
+using System.Net.Http.Json;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace WorkforceManagement.WEB.Controllers
 {
@@ -16,53 +24,25 @@ namespace WorkforceManagement.WEB.Controllers
     [ApiController]
     public class LoginController : Controller
     {
-        private IConfiguration _config;
-        private readonly IUserService _userService;
+        static HttpClient client = new();
 
-        public LoginController(IConfiguration config, IUserService userService)
-        {
-            _config = config;
-            _userService = userService;
-        }
-
-        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginUserModel login)
+        public async Task<string> Login(string username, string password)
         {
-            IActionResult response = Unauthorized();
-            var user = await AuthenticateUser(login);
-
-            if (user != null)
+            var values = new Dictionary<string, string>
             {
-                var tokenString = GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenString });
-            }
+                { "username", username},
+                { "password", password},
+                { "grant_type", "password" },
+                { "client_id", "workforce" },
+                { "client_secret", "secret" }
+            };
 
-            return response;
-        }
+            var content = new FormUrlEncodedContent(values);
 
-        private string GenerateJSONWebToken(LoginUserModel userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            HttpResponseMessage response = await client.PostAsync("https://localhost:5001/connect/token", content);
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              null,
-              expires: DateTime.Now.AddMinutes(120),
-              signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private async Task<LoginUserModel> AuthenticateUser(LoginUserModel model)
-        {
-            LoginUserModel modelUser = new();
-            User user = await _userService.GetUserByUsernameAndPassword(model.Username, model.Password);
-            if (user == null) return null;
-            modelUser.Username = model.Username;
-            modelUser.Password = model.Password;
-            return modelUser;
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }
