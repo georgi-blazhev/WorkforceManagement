@@ -37,7 +37,7 @@ namespace WorkforceManagement.DAL.Repositories
         {
             return await _entities.ToListAsync();
         }
-        public async void CreateAsync(TEntity entity)
+        public async Task CreateAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);
         }
