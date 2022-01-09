@@ -13,9 +13,10 @@ namespace WorkforceManagement.DAL.IRepositories
         Task<TEntity> FindByIdAsync(string id);
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
         Task<List<TEntity>> GetAllAsync();
-        void CreateAsync(TEntity entity);
+        Task CreateAsync(TEntity entity);
         TEntity Edit(TEntity entity);
         void Delete(TEntity entity);
         void DeleteCollection(IEnumerable<TEntity> entities);
+        Task SaveChangesAsync();
     }
 }

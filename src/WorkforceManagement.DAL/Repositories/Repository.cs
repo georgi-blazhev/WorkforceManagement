@@ -37,7 +37,7 @@ namespace WorkforceManagement.DAL.Repositories
         {
             return await _entities.ToListAsync();
         }
-        public async void CreateAsync(TEntity entity)
+        public async Task CreateAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);
         }
@@ -52,6 +52,10 @@ namespace WorkforceManagement.DAL.Repositories
         public void DeleteCollection(IEnumerable<TEntity> entities)
         {
             _entities.RemoveRange(entities);
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _dataContext.SaveChangesAsync();
         }
     }
 }
