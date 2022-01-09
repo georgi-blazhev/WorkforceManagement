@@ -70,13 +70,5 @@ namespace WorkforceManagement.BLL.Services
             }
             return false;
         }
-        public void AssignUserToTeam(User user, Team team)
-        {
-            user.Teams.Add(team);
-        }
-        public void UnassignUserToTeam(User user, Team team)
-        {
-            user.Teams.Remove(team);
-        }
     }
 }

@@ -21,7 +21,5 @@ namespace WorkforceManagement.BLL.IServices
         Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword);
         Task DeleteUserAsync(User user);
         Task<bool> ValidateUserCredentialsAsync(string userName, string password);
-        public void AssignUserToTeam(User user, Team team);
-        public void UnassignUserToTeam(User user, Team team);
     }
 }

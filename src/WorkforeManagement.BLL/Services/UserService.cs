@@ -12,11 +12,9 @@ namespace WorkforceManagement.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
-        private readonly ITeamRepository _teamRepository;
         public UserService(IUserManager userManager, ITeamRepository teamRepository)
         {
             _userManager = userManager;
-            _teamRepository = teamRepository;
         }
         public async Task<User> GetUserByIdAsync(string userId)
         {
@@ -77,24 +75,6 @@ namespace WorkforceManagement.BLL.Services
             // TODO: Delete related information such as TimeOffRequests
             await _userManager.DeleteUserAsync(userToBeDeleted);
         }   
-        public async Task<bool> AssignUserToTeamAsync(string userId, string teamId)
-        {
-            User user = await _userManager.FindByIdAsync(userId);
-            Team team = await _teamRepository.FindByIdAsync(teamId);
-
-            _userManager.AssignUserToTeam(user, team);
-            await _teamRepository.SaveChangesAsync();
-            return true;
-        }
-        public async Task<bool> UnassignUserToTeamAsync(string userId, string teamId)
-        {
-            User user = await _userManager.FindByIdAsync(userId);
-            Team team = await _teamRepository.FindByIdAsync(teamId);
-
-            _userManager.UnassignUserToTeam(user, team);
-            await _teamRepository.SaveChangesAsync();
-            return true;
-        }
 
         public async Task AddUserToRoleAsync(User user, Role role)
         {
