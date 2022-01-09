@@ -38,10 +38,6 @@ namespace WorkforceManagement.BLL.Services
         }
 
 
-        public async Task<User> FindByUserNameAsync(string userName)
-        {
-            return await FindByNameAsync(userName);
-        }
         public async Task<List<User>> GetAllAsync()
         {
             return await Users.ToListAsync();

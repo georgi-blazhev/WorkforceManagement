@@ -14,10 +14,9 @@ namespace WorkforceManagement.BLL.IServices
         Task<List<User>> GetAllUsersAsync();
         Task<List<string>> GetRolesAsync(User user);
         Task<bool> CreateUserAsync(string userName, string eMail, string passWord, string firstName, string lastName, Role role);
-        Task<User> EditUserAsync(string userId, string userName, string eMail, string currentPassword, string newPassword, string firstName, string lastName);
+        Task<bool> EditUserAsync(string userId, string userName, string eMail, string currentPassword, string newPassword, string firstName, string lastName);
         Task DeleteUserAsync(string userId);
         Task<bool> AssignUserToTeamAsync(string userId, string teamId);
         Task<bool> UnassignUserToTeamAsync(string userId, string teamId);
-        Task<User> GetUserByUsernameAndPassword(string userName, string password);
     }
 }

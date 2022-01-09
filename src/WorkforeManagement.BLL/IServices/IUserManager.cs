@@ -12,7 +12,8 @@ namespace WorkforceManagement.BLL.IServices
     public interface IUserManager
     {
         Task<User> FindByIdAsync(string id);
-        Task<User> FindByUserNameAsync(string userName);
+        Task<User> FindByNameAsync(string userName);
+        Task<User> FindByEmailAsync(string name);
         Task<IdentityResult> AddToRoleAsync(User user, string role);
         Task<List<User>> GetAllAsync();
         Task<List<string>> GetUserRolesAsync(User user);

@@ -41,20 +41,22 @@ namespace WorkforceManagement.WEB.Controllers
             return result;
         }
 
-        // TODO: Add log-in controller
-
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task Register(CreateUserModel model)
+        public async Task<ActionResult> Register(CreateUserModel model)
         {
-            await _userService.CreateUserAsync(model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
+            bool userWasCreated = await _userService.CreateUserAsync(model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
+            if (userWasCreated) return Ok("User was successfully registered! ");
+            return BadRequest("A User with such Email or Username already exsists! ");
         }
 
         [HttpPut("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task Edit(EditUserModel model, string userId)
+        public async Task<ActionResult> Edit(EditUserModel model, string userId)
         {
-            await _userService.EditUserAsync(userId, model.NewUserName, model.Email, model.CurrentPassword, model.NewPassword, model.FirstName, model.LastName);
+            bool userWasEdited = await _userService.EditUserAsync(userId, model.NewUserName, model.Email, model.CurrentPassword, model.NewPassword, model.FirstName, model.LastName);
+            if (userWasEdited) return Ok("User was successfully edited! ");
+            return BadRequest("A User with such Email or Username already exsists! ");
         }
 
         [HttpDelete("{userId}")]

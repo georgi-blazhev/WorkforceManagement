@@ -1,22 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using WorkforceManagement.BLL.IServices;
-using WorkforceManagement.DAL.Entities;
-using WorkforceManagment.Models.DTO.Requests.UserRequests;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http;
-using WorkforceManagment.Models.DTO.Responses;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.Resource;
-using System.Net.Http.Json;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace WorkforceManagement.WEB.Controllers
 {

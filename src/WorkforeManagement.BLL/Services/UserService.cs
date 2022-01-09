@@ -24,7 +24,7 @@ namespace WorkforceManagement.BLL.Services
         }
         public async Task<User> GetUserByNameAsync(string userName)
         {
-            return await _userManager.FindByUserNameAsync(userName);
+            return await _userManager.FindByNameAsync(userName);
         }
         public async Task<List<User>> GetAllUsersAsync()
         {
@@ -36,7 +36,8 @@ namespace WorkforceManagement.BLL.Services
         }
         public async Task<bool> CreateUserAsync(string userName, string eMail, string passWord, string firstName, string lastName, Role role)
         {
-            if (await _userManager.FindByUserNameAsync(userName) != null) return false;
+            if (await _userManager.FindByNameAsync(userName) != null) return false;
+            if (await _userManager.FindByEmailAsync(eMail) != null) return false;
 
             User newUser = new()
             {
@@ -51,8 +52,11 @@ namespace WorkforceManagement.BLL.Services
             await AddUserToRoleAsync(newUser, role);
             return true;
         }
-        public async Task<User> EditUserAsync(string userId, string userName, string eMail, string currentPassword, string newPassword, string firstName, string lastName)
+        public async Task<bool> EditUserAsync(string userId, string userName, string eMail, string currentPassword, string newPassword, string firstName, string lastName)
         {
+            if (await _userManager.FindByNameAsync(userName) != null) return false;
+            if (await _userManager.FindByEmailAsync(eMail) != null) return false;
+
             User userToBeEdited = await _userManager.FindByIdAsync(userId);
 
             userToBeEdited.UserName = userName;
@@ -60,7 +64,8 @@ namespace WorkforceManagement.BLL.Services
             userToBeEdited.LastName = lastName;
             userToBeEdited.Email = eMail;
 
-            return await _userManager.UpdateUserAsync(userToBeEdited, currentPassword, newPassword);
+            await _userManager.UpdateUserAsync(userToBeEdited, currentPassword, newPassword);
+            return true;
         }
         public async Task DeleteUserAsync(string userId)
         {
@@ -85,16 +90,6 @@ namespace WorkforceManagement.BLL.Services
             _userManager.UnassignUserToTeam(user, team);
             await _teamRepository.SaveChangesAsync();
             return true;
-        }
-
-        public async Task<User> GetUserByUsernameAndPassword(string userName, string password)
-        {
-            bool credentialsAreValid = await _userManager.ValidateUserCredentialsAsync(userName, password);
-            if (credentialsAreValid)
-            {
-                return await _userManager.FindByUserNameAsync(userName);
-            }
-            return null;
         }
 
         public async Task AddUserToRoleAsync(User user, Role role)
