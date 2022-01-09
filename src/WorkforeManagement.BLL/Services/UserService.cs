@@ -26,6 +26,10 @@ namespace WorkforceManagement.BLL.Services
         {
             return await _userManager.FindByNameAsync(userName);
         }
+        public async Task<User> GetUserByEmailAsync(string eMail)
+        {
+            return await _userManager.FindByEmailAsync(eMail);
+        }
         public async Task<List<User>> GetAllUsersAsync()
         {
             return await _userManager.GetAllAsync();

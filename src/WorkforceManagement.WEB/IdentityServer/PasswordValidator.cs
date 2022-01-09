@@ -20,9 +20,9 @@ namespace WorkforceManagement.WEB
         }
 
         //This method validates the user credentials and if successful teh IdentiryServer will build a token from the context.Result object
-        public async System.Threading.Tasks.Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
+        public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            User user = await _userManager.FindByUserNameAsync(context.UserName);
+            User user = await _userManager.FindByNameAsync(context.UserName);
 
             if (user != null)
             {

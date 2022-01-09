@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Collections.Generic;
+using WorkforceManagement.BLL.IServices;
 
 namespace WorkforceManagement.WEB.Controllers
 {
@@ -9,11 +10,19 @@ namespace WorkforceManagement.WEB.Controllers
     [ApiController]
     public class LoginController : Controller
     {
+        private readonly IUserService _userService;
         static HttpClient client = new();
 
-        [HttpPost]
-        public async Task<string> Login(string username, string password)
+        public LoginController(IUserService userService)
         {
+            _userService = userService;
+        }
+
+        [HttpPost]
+        public async Task<string> Login(string usernameOrEmail, string password)
+        {
+            var username = await GetUsernameAsync(usernameOrEmail);
+
             var values = new Dictionary<string, string>
             {
                 { "username", username},
@@ -29,5 +38,12 @@ namespace WorkforceManagement.WEB.Controllers
 
             return await response.Content.ReadAsStringAsync();
         }
-    }
+
+        private async Task<string> GetUsernameAsync(string usernameOrEmail)
+        {
+            var user = await _userService.GetUserByEmailAsync(usernameOrEmail);
+            if (user != null) return user.UserName;
+            return usernameOrEmail;            
+        }
+    }        
 }
