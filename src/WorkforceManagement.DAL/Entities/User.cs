@@ -15,4 +15,9 @@ namespace WorkforceManagement.DAL.Entities
         public virtual List<Team> Teams { get; set; }
         public virtual List<TimeOffRequest> RequestsRequiringDecision { get; set; }
     }
+    public enum Role
+    {
+        Admin = 1,
+        Regular = 2
+    }
 }

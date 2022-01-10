@@ -12,6 +12,7 @@ using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.BLL.Services;
 using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
+using WorkforceManagement.DAL.IRepositories;
 using WorkforceManagement.DAL.Repositories;
 using WorkforceManagement.WEB.Middleware;
 
@@ -32,7 +33,7 @@ namespace WorkforceManagement.WEB
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Connex"]));
 
             services.AddControllers();
-            
+
 
             // EF Identity
             services.AddIdentityCore<User>(options =>
@@ -46,12 +47,18 @@ namespace WorkforceManagement.WEB
                     .AddEntityFrameworkStores<DatabaseContext>();
 
 
+            // Register Repository implementations
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(ITeamRepository<>), typeof(TeamRepository<>));
+
+
             // Register Service implementations
             services.AddTransient<IUserManager, WorkforceUserManager>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ITeamService, TeamService>();
+            
 
-            // Register Repository implementations
-            services.AddTransient<TeamRepository, TeamRepository>();
-
+            //Register Open API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkforceManagement.WEB", Version = "v1" });
@@ -85,6 +92,8 @@ namespace WorkforceManagement.WEB
                 });
             });
 
+
+            //Register Identity server
             var builder = services.AddIdentityServer((options) =>
             {
                 options.EmitStaticAudienceClaim = true;
@@ -96,6 +105,7 @@ namespace WorkforceManagement.WEB
             builder.AddResourceOwnerValidator<PasswordValidator>();
 
 
+            //Register Auth services
             services.AddAuthorization()
                 .AddAuthentication(options =>
                 {
@@ -133,7 +143,6 @@ namespace WorkforceManagement.WEB
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.UseEndpoints(endpoints =>
             {

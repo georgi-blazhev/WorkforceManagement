@@ -11,15 +11,15 @@ namespace WorkforceManagement.BLL.IServices
 {
     public interface IUserManager
     {
-        Task CreateUserAsync(User user, string password);
-        Task<IdentityResult> DeleteUserAsync(User user);
-        Task<User> FindByUserNameAsync(string userName);
         Task<User> FindByIdAsync(string id);
-        Task<IdentityResult> UpdateUserAsync(User user);
-        Task<List<User>> GetAllAsync();
+        Task<User> FindByNameAsync(string userName);
+        Task<User> FindByEmailAsync(string name);
         Task<IdentityResult> AddToRoleAsync(User user, string role);
-        Task<bool> ValidateUserCredentials(string userName, string password);
+        Task<List<User>> GetAllAsync();
         Task<List<string>> GetUserRolesAsync(User user);
-        Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal);
+        Task CreateUserAsync(User user, string password);
+        Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword);
+        Task DeleteUserAsync(User user);
+        Task<bool> ValidateUserCredentialsAsync(string userName, string password);
     }
 }

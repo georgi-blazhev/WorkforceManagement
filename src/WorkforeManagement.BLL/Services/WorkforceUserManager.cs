@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -14,8 +15,6 @@ namespace WorkforceManagement.BLL.Services
 {
     public class WorkforceUserManager : UserManager<User>, IUserManager
     {
-        private readonly DatabaseContext _databaseContext;
-
         public WorkforceUserManager(IUserStore<User> store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<User> passwordHasher,
@@ -24,7 +23,7 @@ namespace WorkforceManagement.BLL.Services
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             IServiceProvider services,
-            ILogger<UserManager<User>> logger, DatabaseContext databaseContext) :
+            ILogger<UserManager<User>> logger) :
             base(store,
             optionsAccessor,
             passwordHasher,
@@ -35,35 +34,33 @@ namespace WorkforceManagement.BLL.Services
             services,
             logger)
         {
-            _databaseContext = databaseContext;
+
         }
 
-        public Task CreateUserAsync(User user, string password)
+
+        public async Task<List<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await Users.ToListAsync();
         }
-
-        public Task<IdentityResult> DeleteUserAsync(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<User> FindByUserNameAsync(string userName)
-        {
-            return await FindByNameAsync(userName);
-        }
-
-        public Task<List<User>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<string>> GetUserRolesAsync(User user)
         {
             return (await GetRolesAsync(user)).ToList();
         }
-
-        public async Task<bool> ValidateUserCredentials(string userName, string password)
+        public async Task CreateUserAsync(User user, string password)
+        {
+            await CreateAsync(user, password);
+        }
+        public async Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword)
+        {
+            await ChangePasswordAsync(user, currentPassword, newPassword);
+            await UpdateAsync(user);
+            return user;
+        }
+        public async Task DeleteUserAsync(User user)
+        {
+            await DeleteAsync(user);
+        }
+        public async Task<bool> ValidateUserCredentialsAsync(string userName, string password)
         {
             User user = await FindByNameAsync(userName);
             if (user != null)
@@ -72,11 +69,6 @@ namespace WorkforceManagement.BLL.Services
                 return result;
             }
             return false;
-        }
-
-        Task<IdentityResult> IUserManager.UpdateUserAsync(User user)
-        {
-            throw new NotImplementedException();
         }
     }
 }
