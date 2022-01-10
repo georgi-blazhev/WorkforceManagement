@@ -12,5 +12,3 @@ namespace WorkforceManagement.DAL.Repositories
         }
     }
 }
-
-

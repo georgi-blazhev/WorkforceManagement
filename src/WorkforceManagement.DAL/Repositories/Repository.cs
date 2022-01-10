@@ -42,33 +42,43 @@ namespace WorkforceManagement.DAL.Repositories
         public virtual async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             IEnumerable<TEntity> entities = await _entities.AsQueryable().Where(predicate).ToListAsync();
+
             if (entities != null) return entities;
+
             throw new KeyNotFoundException($"An entity with the given Name does not exist!");
         }
+
         public async Task<List<TEntity>> GetAllAsync()
         {
             return await _entities.ToListAsync();
         }
+
         public async Task CreateAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);
             await _dataContext.SaveChangesAsync();
         }
+
         public virtual TEntity Edit(TEntity entity)
         {
-            return _entities.Update(entity).Entity;
+            var result = _entities.Update(entity).Entity;
+            _dataContext.SaveChanges();
+            return result;
         }
+
         public void Delete(TEntity entity)
         {
             _entities.Remove(entity);
              _dataContext.SaveChanges();
         }
+
         public void DeleteCollection(IEnumerable<TEntity> entities)
         {
             _entities.RemoveRange(entities);
             _dataContext.SaveChanges();
 
         }
+
         public async Task SaveChangesAsync()
         {
             await _dataContext.SaveChangesAsync();

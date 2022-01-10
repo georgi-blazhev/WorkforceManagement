@@ -6,6 +6,7 @@ using WorkforceManagement.Models.DTO.Requests.TeamRequests;
 using WorkforceManagement.Models.DTO.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WorkforceManagment.Models.DTO.Responses;
 
 namespace WorkforceManagement.WEB.Controllers
 {
@@ -73,25 +74,42 @@ namespace WorkforceManagement.WEB.Controllers
 
         [HttpGet]
         [Route("/teams")]
-        public async Task<List<TeamResponse>> GetAllTeams()
+        public async Task<List<TeamResponseModel>> GetAllTeams()
         {
-            var teams = new List<TeamResponse>();
+            var teams = new List<TeamResponseModel>();
             var teamsFromDb = await _teamService.GetAllTeamsAsync();
 
             foreach (var team in teamsFromDb)
             {
-                teams.Add(new TeamResponse()
+                teams.Add(new TeamResponseModel()
                 {
                     Title = team.Title,
                     Description = team.Description,
-                    //TODO: TO fix the response because if a team has no TL it throws NoArgsExc
-                    //TeamLeader = team.TeamLeader.UserName
                 });
             }
 
             return teams;
         }
 
-        //TODO: Creatе GetMembers method when UserResponse is available
+        [HttpGet]
+        [Route("/members")]
+        public async Task<List<UserResponseModel>> GetMembers(string teamId)
+        {
+            var users = new List<UserResponseModel>();
+            var usersFromDb = await _teamService.GetAllMembersOfTeam(teamId);
+
+            foreach (var user in usersFromDb)
+            {
+                users.Add(new UserResponseModel()
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                });
+            }
+
+            return users;
+        }
     }
 }

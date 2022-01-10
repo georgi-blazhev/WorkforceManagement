@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
@@ -22,7 +20,12 @@ namespace WorkforceManagement.BLL.Services
 
         public async Task CreateTeam(string title)
         {
-            //TODO: Already Existing
+            var team = _teamRepository.FindByNameAsync(title);
+            if (team != null)
+            {
+                throw new DuplicateNameException("A team with this title already exist");
+            }
+
             await _teamRepository.CreateAsync(new Team() { Title = title });
         }
 
