@@ -5,6 +5,7 @@ namespace WorkforceManagement.Models.DTO.Responses
 {
     public class TimeOffRequestReponseModel
     {
+        public string Id { get; set; }
         public TimeOffRequestType Type { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

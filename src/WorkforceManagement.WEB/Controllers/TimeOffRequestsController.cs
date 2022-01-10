@@ -29,10 +29,10 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateTimeOffRequestModel>> PostTimeOff(CreateTimeOffRequestModel timeOffRequestModel)
+        public async Task<IActionResult> PostTimeOff(CreateTimeOffRequestModel timeOffRequestModel)
         {
             await _timeOffRequestService.CreateTimeOffAsync(timeOffRequestModel);
-            return CreatedAtAction("CreateTeam", timeOffRequestModel);
+            return NoContent();
         }
 
         [HttpPut("{Id}")]        

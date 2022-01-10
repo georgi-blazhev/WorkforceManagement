@@ -29,6 +29,7 @@ namespace WorkforceManagement.BLL.Services
             newTimeOff.Reason = timeOffRequest.Reason;
             newTimeOff.Type = timeOffRequest.Type;
             newTimeOff.Status = Status.Created;
+            newTimeOff.CreatedAt = DateTime.Now;
             await _timeOffRequestRepository.CreateTimeOffAsync(newTimeOff);
         }
         public async Task DeleteTimeOffAsync(string id)
@@ -43,6 +44,7 @@ namespace WorkforceManagement.BLL.Services
             originalTimeOff.EndDate = timeOffRequest.EndDate;
             originalTimeOff.Reason = timeOffRequest.Reason;
             originalTimeOff.Type = timeOffRequest.Type;
+            originalTimeOff.LastChange = DateTime.Now;
             _timeOffRequestRepository.EditTimeOff(originalTimeOff);
         }
         public async Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync()
@@ -54,10 +56,12 @@ namespace WorkforceManagement.BLL.Services
             {
                 result.Add(new TimeOffRequestReponseModel()
                 {
+                    Id = tmr.Id.ToString(),
                     StartDate = tmr.StartDate,
                     EndDate = tmr.EndDate,
                     Reason = tmr.Reason,
                     Type = tmr.Type
+                    
                 });
             }
             return result;
