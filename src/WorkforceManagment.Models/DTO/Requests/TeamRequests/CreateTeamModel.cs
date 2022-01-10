@@ -8,5 +8,8 @@ namespace WorkforceManagement.Models.DTO.Requests.TeamRequests
         [MinLength(3)]
         [MaxLength(50)]
         public string Title { get; set; }
+
+        [Required]
+        public string Description { get; set; }
     }
 }

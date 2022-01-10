@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{858ABE1C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL.UnitTests", "..\WorkforceManagment.BLL.UnitTests\WorkforceManagement.BLL.UnitTests.csproj", "{DBDECA93-8FE3-4D78-BEC8-92046197668C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagment.Models", "..\WorkforceManagment.Models\WorkforceManagment.Models.csproj", "{2D217EA3-FA58-4B57-A612-17D1BDD550BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.Models", "..\WorkforceManagment.Models\WorkforceManagement.Models.csproj", "{2D217EA3-FA58-4B57-A612-17D1BDD550BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

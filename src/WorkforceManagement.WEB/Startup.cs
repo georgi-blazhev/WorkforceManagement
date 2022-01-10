@@ -37,7 +37,7 @@ namespace WorkforceManagement.WEB
 
             services.AddControllers();
 
-
+            #region EF Identity
             // EF Identity
             services.AddIdentityCore<User>(options =>
             {
@@ -48,14 +48,21 @@ namespace WorkforceManagement.WEB
             })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<DatabaseContext>();
+            #endregion
+
+            // Register Repository implementations
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(ITeamRepository<>), typeof(TeamRepository<>));
 
 
+            #region Register Service Implementations
             // Register Service implementations
             services.AddTransient<IUserManager, WorkforceUserManager>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ITeamService, TeamService>();
+            #endregion
 
-            // Register Repository implementations
-            services.AddTransient<ITeamRepository, TeamRepository>();
+            
 
             services.AddSwaggerGen(c =>
             {

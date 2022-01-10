@@ -10,7 +10,7 @@ using WorkforceManagement.DAL.IRepositories;
 
 namespace WorkforceManagement.DAL.Repositories
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : AbstractEntity
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : AbstractEntity
     {
         protected readonly DatabaseContext _dataContext;
         protected readonly DbSet<TEntity> _entities;
@@ -52,6 +52,7 @@ namespace WorkforceManagement.DAL.Repositories
         public async Task CreateAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);
+            await _dataContext.SaveChangesAsync();
         }
         public virtual TEntity Edit(TEntity entity)
         {
@@ -60,10 +61,13 @@ namespace WorkforceManagement.DAL.Repositories
         public void Delete(TEntity entity)
         {
             _entities.Remove(entity);
+             _dataContext.SaveChanges();
         }
         public void DeleteCollection(IEnumerable<TEntity> entities)
         {
             _entities.RemoveRange(entities);
+            _dataContext.SaveChanges();
+
         }
         public async Task SaveChangesAsync()
         {
