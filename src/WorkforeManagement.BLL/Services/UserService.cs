@@ -12,10 +12,12 @@ namespace WorkforceManagement.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
-        public UserService(IUserManager userManager, ITeamRepository teamRepository)
+
+        public UserService(IUserManager userManager, ITeamRepository<Team> teamRepository)
         {
             _userManager = userManager;
         }
+
         public async Task<User> GetUserByIdAsync(string userId)
         {
             return await _userManager.FindByIdAsync(userId);

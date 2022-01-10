@@ -4,7 +4,7 @@ using WorkforceManagement.DAL.IRepositories;
 
 namespace WorkforceManagement.DAL.Repositories
 {
-    public class TeamRepository : Repository<Team>, ITeamRepository
+    public class TeamRepository<TEntity> : Repository<Team>, ITeamRepository<Team>
     {
         public TeamRepository(DatabaseContext context)
             : base(context)
@@ -12,5 +12,3 @@ namespace WorkforceManagement.DAL.Repositories
         }
     }
 }
-
-
