@@ -8,7 +8,7 @@ namespace WorkforceManagement.DAL.Repositories
     {
         Task CreateTimeOffAsync(TimeOffRequest timeOffRequest);
         Task DeleteTimeOffAsync(TimeOffRequest timeOffRequest);
-        Task EditTimeOffAsync(TimeOffRequest timeOffRequest);
+        void EditTimeOffAsync(TimeOffRequest timeOffRequest);
         Task<List<TimeOffRequest>> GetAllTimeOffRequest();
         Task<List<TimeOffRequest>> GetAllTimeOffsByUser(User user);
         Task<TimeOffRequest> GetTimeOffByIdAsync(string id);
