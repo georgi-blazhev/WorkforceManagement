@@ -22,6 +22,7 @@ namespace WorkforceManagement.BLL.Services
 
         public async Task CreateTeam(string title)
         {
+            //TODO: Already Existing
             await _teamRepository.CreateAsync(new Team() { Title = title });
         }
 
@@ -50,11 +51,6 @@ namespace WorkforceManagement.BLL.Services
         public async Task DeleteUserFromTeam(User user, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
-
-            if (team == null)
-            {
-                throw new Exception("");
-            }
 
             team.Members.Remove(user);
         }
@@ -92,11 +88,6 @@ namespace WorkforceManagement.BLL.Services
         {
             var currentUserRoles = await _userManager.GetUserRolesAsync(user);
             var team = await _teamRepository.FindByIdAsync(teamId);
-
-            if (team == null)
-            {
-                throw new Exception("");
-            }
 
             if (team.Members.Contains(user) || currentUserRoles.Contains("admin"))
             {
