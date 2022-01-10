@@ -50,12 +50,14 @@ namespace WorkforceManagement.WEB
             // Register Repository implementations
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(ITeamRepository<>), typeof(TeamRepository<>));
+            services.AddTransient(typeof(ITimeOffRequestRepository), typeof(TimeOffRequestRepository));
 
 
             // Register Service implementations
             services.AddTransient<IUserManager, WorkforceUserManager>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<ITimeOffRequestService, TimeOffRequestService>();
             
 
             //Register Open API

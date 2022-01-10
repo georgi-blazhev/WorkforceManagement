@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagement.Models.DTO.Requests.TimeOffRequests;
+using WorkforceManagement.Models.DTO.Responses;
 
 namespace WorkforceManagement.BLL.Services
 {
@@ -10,6 +11,6 @@ namespace WorkforceManagement.BLL.Services
         Task CreateTimeOffAsync(CreateTimeOffRequestModel timeOffRequest);
         Task DeleteTimeOffAsync(string id);
         Task EditTimeOff(EditTimeOffRequestModel timeOffRequest, string id);
-        Task<List<TimeOffRequest>> GetAllTimeOffsAsync();
+        Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync();
     }
 }

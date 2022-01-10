@@ -7,6 +7,7 @@ using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagement.DAL.Repositories;
 using WorkforceManagement.Models.DTO.Requests.TimeOffRequests;
+using WorkforceManagement.Models.DTO.Responses;
 
 namespace WorkforceManagement.BLL.Services
 {
@@ -44,9 +45,22 @@ namespace WorkforceManagement.BLL.Services
             originalTimeOff.Type = timeOffRequest.Type;
             _timeOffRequestRepository.EditTimeOff(originalTimeOff);
         }
-        public async Task<List<TimeOffRequest>> GetAllTimeOffsAsync()
+        public async Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync()
         {
-            return await _timeOffRequestRepository.GetAllTimeOffRequest();
+            var all = await _timeOffRequestRepository.GetAllTimeOffRequest();
+            List<TimeOffRequestReponseModel> result = new List<TimeOffRequestReponseModel>();
+
+            foreach (var tmr in all)
+            {
+                result.Add(new TimeOffRequestReponseModel()
+                {
+                    StartDate = tmr.StartDate,
+                    EndDate = tmr.EndDate,
+                    Reason = tmr.Reason,
+                    Type = tmr.Type
+                });
+            }
+            return result;
         }
     }
 }

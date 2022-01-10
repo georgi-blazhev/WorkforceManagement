@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj" />
+    <ProjectReference Include="..\WorkforceManagment.Models\WorkforceManagement.Models.csproj" />
   </ItemGroup>
 
 </Project>
