@@ -4,7 +4,7 @@ using WorkforceManagement.DAL.Entities;
 
 namespace WorkforceManagement.Models.DTO.Requests.TimeOffRequests
 {
-    class EditTimeOffRequestModel
+    public class EditTimeOffRequestModel
     {
 
         [Required]

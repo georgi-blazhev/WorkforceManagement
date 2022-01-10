@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using WorkforceManagement.DAL.Entities;
 
-namespace WorkforceManagement.Models.DTO.Requests.TeamRequests
+namespace WorkforceManagement.Models.DTO.Requests.TimeOffRequests
 {
-    class CreateTimeOffRequestModel
+    public class CreateTimeOffRequestModel
     {
         [Required]
         public TimeOffRequestType Type { get; set; }

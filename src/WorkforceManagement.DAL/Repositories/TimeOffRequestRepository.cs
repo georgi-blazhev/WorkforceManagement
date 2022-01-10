@@ -12,9 +12,9 @@ namespace WorkforceManagement.DAL.Repositories
     public class TimeOffRequestRepository : Repository<TimeOffRequest>, ITimeOffRequestRepository
     {
         private readonly DatabaseContext _context;
-        private readonly ITeamRepository _teamRepository;
+        private readonly ITeamRepository<Team> _teamRepository;
 
-        public TimeOffRequestRepository(DatabaseContext context, ITeamRepository teamRepository)
+        public TimeOffRequestRepository(DatabaseContext context, ITeamRepository<Team> teamRepository)
             : base(context)
         {
             _context = context;
@@ -37,19 +37,19 @@ namespace WorkforceManagement.DAL.Repositories
 
         public async Task CreateTimeOffAsync(TimeOffRequest timeOffRequest)
         {
-            // await CreateAsync(timeOffRequest);
-            // var teams = _teamReposityory.GetAllTeamsForUser(timeOffRequest.Creator);  // or by id idk
+            await CreateAsync(timeOffRequest);
+            var teams = await _teamRepository.FindAsync(t => t.Members.Contains(timeOffRequest.Creator));
             // will need the newly created timeoffrequest id later on so i search it in the database
-            //var update = _context.TimeOffRequests.FirstOrDefault(
-            //   t => t.CreatorId == timeOffRequest.CreatorId && t.StartDate == timeOffRequest.StartDate && t.EndDate == timeOffRequest.EndDate);
-            //foreach (var team in teams)
-            //{           
-            //     UserTimeOffRequest utr = new();
-            //     utr.ApproverId = team.TeamLeaderId;
-            //     utr.TimeOffRequestId = update.Id;
-            //     await context.UserTimeOffRequests.AddAsync(utr);
-            //}
-            // await SaveChangesAsync();
+             var update = _context.TimeOffRequests.FirstOrDefault(
+               t => t.CreatorId == timeOffRequest.CreatorId && t.StartDate == timeOffRequest.StartDate && t.EndDate == timeOffRequest.EndDate);
+            foreach (var team in teams)
+            {           
+                 UserTimeOffRequest utr = new();
+                 utr.ApproverId = team.TeamLeaderId;
+                 utr.TimeOffRequestId = update.Id;
+                 await _context.UserTimeOffRequests.AddAsync(utr);
+            }
+             await SaveChangesAsync();
         }
 
         public async Task DeleteTimeOffAsync(TimeOffRequest timeOffRequest)
@@ -60,13 +60,12 @@ namespace WorkforceManagement.DAL.Repositories
                 _context.UserTimeOffRequests.Remove(utr);
             }
             Delete(timeOffRequest);
-            // await SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
-        public async Task EditTimeOffAsync(TimeOffRequest timeOffRequest)
+        public void EditTimeOff(TimeOffRequest timeOffRequest)
         {
-            Edit(timeOffRequest);
-            // await SaveChangesAsync();
+            Edit(timeOffRequest);            
         }
 
 
