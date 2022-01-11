@@ -26,32 +26,34 @@ namespace WorkforceManagement.WEB.Controllers
         [Route("All")]
         public async Task<List<TeamResponseModel>> GetAll()
         {
-            var teams = new List<TeamResponseModel>();
-            var teamsFromDb = await _teamService.GetAllTeamsAsync();
+            var allTeams = await _teamService.GetAllTeamsAsync();
+            List<TeamResponseModel> teamModels = new();
 
-            foreach (var team in teamsFromDb)
+            foreach (var team in allTeams)
             {
-                teams.Add(new TeamResponseModel()
+                teamModels.Add(new TeamResponseModel()
                 {
+                    Id = team.Id,
                     Title = team.Title,
                     Description = team.Description,
                 });
             }
 
-            return teams;
+            return teamModels;
         }
 
         [HttpGet]
         [Route("{teamId}/Members")]
         public async Task<List<UserResponseModel>> GetMembers(string teamId)
         {
-            var users = new List<UserResponseModel>();
-            var usersFromDb = await _teamService.GetAllMembersOfTeam(teamId);
+            var allUsers = await _teamService.GetAllMembersOfTeam(teamId);
+            List<UserResponseModel> members = new();
 
-            foreach (var user in usersFromDb)
+            foreach (var user in allUsers)
             {
-                users.Add(new UserResponseModel()
+                members.Add(new UserResponseModel()
                 {
+                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     FirstName = user.FirstName,
@@ -59,15 +61,15 @@ namespace WorkforceManagement.WEB.Controllers
                 });
             }
 
-            return users;
+            return members;
         }
 
         [HttpPost]
-        public void Create(CreateTeamModel team) // TODO: Do we need a whole model just to pass a single property?
+        public void Create(CreateTeamModel team)
         {
             if (ModelState.IsValid)
             {
-                _teamService.CreateTeam(team.Title);
+                _teamService.CreateTeamAsync(team.Title, team.Description);
             }
         }
 
@@ -91,21 +93,21 @@ namespace WorkforceManagement.WEB.Controllers
 
         [HttpPost]
         [Route("{teamId}/Assign/{userId}")]
-        public void AssignUserToTeam(User user, string teamId) // TODO: How are you passing a whole user?
+        public void AssignUserToTeam(string userId, string teamId)
         {
             if (ModelState.IsValid)
             {
-                _teamService.AssignUserToTeam(user, teamId);
+                _teamService.AssignUserToTeam(userId, teamId);
             }
         }
 
         [HttpDelete]
         [Route("{teamId}/Unassign/{userId}")]
-        public void DeleteUserFromTeam(User user, string teamId)
+        public void UnassignUserFromTeam(string userId, string teamId)
         {
             if (ModelState.IsValid)
             {
-                _teamService.DeleteUserFromTeam(user, teamId);
+                _teamService.UnassignUserFromTeam(userId, teamId);
             }
         }
     }

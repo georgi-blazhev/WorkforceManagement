@@ -29,10 +29,6 @@ namespace WorkforceManagement.WEB.Controllers
         public async Task<List<TimeOffReponseModel>> GetAll()
         {
             var allTimeOffs = await _timeOffRequestService.GetAllTimeOffsAsync();
-
-            if (allTimeOffs == null)
-                throw new KeyNotFoundException("There are no time off requests at the moment");
-
             List<TimeOffReponseModel> result = new();
 
             foreach (var timeOff in allTimeOffs)

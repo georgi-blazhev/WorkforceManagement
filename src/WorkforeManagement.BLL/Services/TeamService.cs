@@ -19,7 +19,7 @@ namespace WorkforceManagement.BLL.Services
             _userManager = userManager;
         }
 
-        public async Task CreateTeam(string title)
+        public async Task CreateTeamAsync(string title, string description)
         {
             var team =  _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
             if (team != null)
@@ -27,7 +27,7 @@ namespace WorkforceManagement.BLL.Services
                 throw new DuplicateNameException("A team with this title already exist");
             }
 
-            await _teamRepository.CreateAsync(new Team() { Title = title });
+            await _teamRepository.CreateAsync(new Team() { Title = title, Description = description });
         }
 
         public async Task EditTeam(string id, string title, string description)
@@ -45,16 +45,18 @@ namespace WorkforceManagement.BLL.Services
             _teamRepository.Delete(team);
         }
 
-        public async Task AssignUserToTeam(User user, string teamId)
+        public async Task AssignUserToTeam(string userId, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
 
             team.Members.Add(user);
         }
 
-        public async Task DeleteUserFromTeam(User user, string teamId)
+        public async Task UnassignUserFromTeam(string userId, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
 
             team.Members.Remove(user);
         }
