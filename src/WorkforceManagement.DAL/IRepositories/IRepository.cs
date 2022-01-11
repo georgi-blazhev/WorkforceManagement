@@ -15,6 +15,5 @@ namespace WorkforceManagement.DAL.IRepositories
         TEntity Edit(TEntity entity);
         void Delete(TEntity entity);
         void DeleteCollection(IEnumerable<TEntity> entities);
-        Task SaveChangesAsync();
     }
 }

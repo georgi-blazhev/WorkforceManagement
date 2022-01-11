@@ -69,11 +69,5 @@ namespace WorkforceManagement.DAL.Repositories
             _dataContext.SaveChanges();
 
         }
-
-        public async Task SaveChangesAsync()
-        {
-            // TODO: Remove SaveChanges()
-            await _dataContext.SaveChangesAsync();
-        }
     }
 }

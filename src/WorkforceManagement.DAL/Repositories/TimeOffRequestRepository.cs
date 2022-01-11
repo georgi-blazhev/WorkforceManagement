@@ -35,7 +35,7 @@ namespace WorkforceManagement.DAL.Repositories
                  utr.TimeOffRequestId = update.Id;
                  await _dataContext.UserTimeOffRequests.AddAsync(utr);
             }
-             await SaveChangesAsync();
+             await _dataContext.SaveChangesAsync();
         }
 
         public async Task DeleteTimeOffAsync(TimeOffRequest timeOffRequest)
@@ -46,7 +46,7 @@ namespace WorkforceManagement.DAL.Repositories
                 _dataContext.UserTimeOffRequests.Remove(utr);
             }
             Delete(timeOffRequest);
-            await SaveChangesAsync();
+            await _dataContext.SaveChangesAsync();
         }
 
         public void EditTimeOff(TimeOffRequest timeOffRequest)
