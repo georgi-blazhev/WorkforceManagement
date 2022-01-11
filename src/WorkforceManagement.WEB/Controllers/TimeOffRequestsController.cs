@@ -16,10 +16,12 @@ namespace WorkforceManagement.WEB.Controllers
     public class TimeOffRequestsController : ControllerBase
     {
         private readonly ITimeOffRequestService _timeOffRequestService;
+        private readonly IUserService _userService;
 
-        public TimeOffRequestsController(ITimeOffRequestService timeOffRequestService) : base()
+        public TimeOffRequestsController(ITimeOffRequestService timeOffRequestService,IUserService userService) : base()
         {
             _timeOffRequestService = timeOffRequestService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -31,7 +33,8 @@ namespace WorkforceManagement.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> PostTimeOff(CreateTimeOffRequestModel timeOffRequestModel)
         {
-            await _timeOffRequestService.CreateTimeOffAsync(timeOffRequestModel);
+            var currentUser = await _userService.GetCurrentUser(User);
+            await _timeOffRequestService.CreateTimeOffAsync(timeOffRequestModel,currentUser);
             return NoContent();
         }
 

@@ -20,7 +20,7 @@ namespace WorkforceManagement.BLL.Services
 
         public async Task CreateTeam(string title)
         {
-            var team = _teamRepository.FindByNameAsync(title);
+            var team =  _teamRepository.FindByNameAsync(title);
             if (team != null)
             {
                 throw new DuplicateNameException("A team with this title already exist");

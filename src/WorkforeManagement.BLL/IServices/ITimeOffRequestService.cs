@@ -8,7 +8,7 @@ namespace WorkforceManagement.BLL.Services
 {
     public interface ITimeOffRequestService
     {
-        Task CreateTimeOffAsync(CreateTimeOffRequestModel timeOffRequest);
+        Task CreateTimeOffAsync(CreateTimeOffRequestModel timeOffRequest,User user);
         Task DeleteTimeOffAsync(string id);
         Task EditTimeOff(EditTimeOffRequestModel timeOffRequest, string id);
         Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync();

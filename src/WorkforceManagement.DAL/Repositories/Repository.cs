@@ -32,6 +32,7 @@ namespace WorkforceManagement.DAL.Repositories
 
         public async Task<TEntity> FindByNameAsync(string title)
         {
+
             TEntity entity = await _entities.FindAsync(title);
 
             if (entity != null) return entity;

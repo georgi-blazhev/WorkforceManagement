@@ -38,7 +38,7 @@ namespace WorkforceManagement.DAL.Repositories
         public async Task CreateTimeOffAsync(TimeOffRequest timeOffRequest)
         {
             await CreateAsync(timeOffRequest);
-            var teams = await _teamRepository.FindAsync(t => t.Members.Contains(timeOffRequest.Creator));
+            var teams = await _teamRepository.FindAsync(t => t.Members.Any(u=> u.Id == timeOffRequest.CreatorId));
             // will need the newly created timeoffrequest id later on so i search it in the database
              var update = _context.TimeOffRequests.FirstOrDefault(
                t => t.CreatorId == timeOffRequest.CreatorId && t.StartDate == timeOffRequest.StartDate && t.EndDate == timeOffRequest.EndDate);
