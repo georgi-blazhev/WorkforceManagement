@@ -18,7 +18,7 @@ namespace WorkforceManagement.DAL.Entities
 
     public enum TimeOffRequestType
     {
-        Paid, NonPaid, SickLeave
+        Paid, Unpaid, SickLeave
     }
 
     public enum Status

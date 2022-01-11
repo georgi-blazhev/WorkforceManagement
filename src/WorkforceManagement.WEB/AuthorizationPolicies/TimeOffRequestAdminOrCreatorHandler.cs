@@ -33,7 +33,7 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
 
             User current = await _userService.GetUserByNameAsync(currentUserName);
 
-            Guid timeOffRequestId = Guid.Parse(_httpContextAccessor.HttpContext.GetRouteValue("Id").ToString());
+            Guid timeOffRequestId = Guid.Parse(_httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString());
 
             var allTimeOffRequests = await _timeOffRequestService.GetAllTimeOffsAsync();
 
