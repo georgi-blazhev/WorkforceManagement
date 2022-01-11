@@ -14,6 +14,7 @@ namespace WorkforceManagement.BLL.Services
     public class TimeOffRequestService : ITimeOffRequestService
     {
         private readonly ITimeOffRequestRepository _timeOffRequestRepository;        
+
         public TimeOffRequestService(ITimeOffRequestRepository timeOffRequestRepository)
         {
             _timeOffRequestRepository = timeOffRequestRepository;           
@@ -76,28 +77,9 @@ namespace WorkforceManagement.BLL.Services
             _timeOffRequestRepository.EditTimeOff(originalTimeOff);
                 
         }
-        public async Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync()
+        public async Task<List<TimeOffRequest>> GetAllTimeOffsAsync()
         {
-            var all = await _timeOffRequestRepository.GetAllAsync();
-
-            List<TimeOffRequestReponseModel> result = new List<TimeOffRequestReponseModel>();
-
-            if (all == null)
-                throw new KeyNotFoundException("There are no time off requests at the moment");
-
-            foreach (var tmr in all)
-            {
-                result.Add(new TimeOffRequestReponseModel()
-                {
-                    Id = tmr.Id.ToString(),
-                    StartDate = tmr.StartDate,
-                    EndDate = tmr.EndDate,
-                    Reason = tmr.Reason,
-                    Type = tmr.Type
-                    
-                });
-            }
-            return result;
+            return await _timeOffRequestRepository.GetAllAsync();
         }
     }
 }

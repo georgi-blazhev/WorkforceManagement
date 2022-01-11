@@ -28,7 +28,27 @@ namespace WorkforceManagement.WEB.Controllers
         [Route("/requests/all")]
         public async Task<List<TimeOffRequestReponseModel>> GetAll()
         {
-            return await _timeOffRequestService.GetAllTimeOffsAsync();
+            var all = await _timeOffRequestService.GetAllTimeOffsAsync();
+
+            List<TimeOffRequestReponseModel> result = new List<TimeOffRequestReponseModel>();
+
+            if (all == null)
+
+                throw new KeyNotFoundException("There are no time off requests at the moment");
+
+            foreach (var tmr in all)
+            {
+                result.Add(new TimeOffRequestReponseModel()
+                {
+                    Id = tmr.Id.ToString(),
+                    StartDate = tmr.StartDate,
+                    EndDate = tmr.EndDate,
+                    Reason = tmr.Reason,
+                    Type = tmr.Type
+
+                });
+            }
+            return result;
         }
 
         [HttpPost]

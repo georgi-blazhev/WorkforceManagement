@@ -11,6 +11,6 @@ namespace WorkforceManagement.BLL.Services
         Task CreateTimeOffAsync(CreateTimeOffRequestModel timeOffRequest,User user);
         Task DeleteTimeOffAsync(string id);
         Task EditTimeOff(EditTimeOffRequestModel timeOffRequest, string id);
-        Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync();
+        Task<List<TimeOffRequest>> GetAllTimeOffsAsync();
     }
 }
