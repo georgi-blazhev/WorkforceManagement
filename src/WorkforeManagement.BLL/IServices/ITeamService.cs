@@ -12,7 +12,7 @@ namespace WorkforceManagement.BLL.IServices
         Task AssignUserToTeam(User user, string teamId);
         Task DeleteUserFromTeam(User user, string teamId);
         Task<Team> GetTeamByIdAsync(string id);
-        Task<Team> GetTeamByTitleAsync(string title);
+        Team GetTeamByTitleAsync(string title);
         Task<List<Team>> GetAllTeamsAsync();
         Task<List<User>> GetAllMembersOfTeam(string id);
         Task<User> GetTeamLeadOfTeamAsync(string id);

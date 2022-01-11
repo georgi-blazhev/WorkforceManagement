@@ -14,7 +14,7 @@ namespace WorkforceManagement.BLL.Services
     {
         private readonly IUserManager _userManager;
 
-        public UserService(IUserManager userManager, ITeamRepository<Team> teamRepository)
+        public UserService(IUserManager userManager)
         {
             _userManager = userManager;
         }
