@@ -30,16 +30,6 @@ namespace WorkforceManagement.DAL.Repositories
             throw new KeyNotFoundException($"An entity with the given ID does not exist!");
         }
 
-        public async Task<TEntity> FindByNameAsync(string title)
-        {
-
-            TEntity entity = await _entities.FindAsync(title);
-
-            if (entity != null) return entity;
-
-            throw new KeyNotFoundException($"An entity with the given name does not exist!");
-        }
-
         public virtual async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             IEnumerable<TEntity> entities = await _entities.AsQueryable().Where(predicate).ToListAsync();
@@ -82,6 +72,7 @@ namespace WorkforceManagement.DAL.Repositories
 
         public async Task SaveChangesAsync()
         {
+            // TODO: Remove SaveChanges()
             await _dataContext.SaveChangesAsync();
         }
     }

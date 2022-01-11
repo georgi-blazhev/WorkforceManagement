@@ -9,7 +9,6 @@ namespace WorkforceManagement.DAL.IRepositories
     public interface IRepository<TEntity> where TEntity : AbstractEntity
     {
         Task<TEntity> FindByIdAsync(string id);
-        Task<TEntity> FindByNameAsync(string name);
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
         Task<List<TEntity>> GetAllAsync();
         Task CreateAsync(TEntity entity);
