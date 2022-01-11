@@ -45,7 +45,7 @@ namespace WorkforceManagement.BLL.Services
         }
         public async Task DeleteTimeOffAsync(string id)
         {
-            var timeOff = await _timeOffRequestRepository.GetTimeOffByIdAsync(id);
+            var timeOff = await _timeOffRequestRepository.FindByIdAsync(id);
             if (timeOff == null)
                 throw new ArgumentException("Invalid time off id");
             await _timeOffRequestRepository.DeleteTimeOffAsync(timeOff);
@@ -54,7 +54,7 @@ namespace WorkforceManagement.BLL.Services
         { // check dates 
             if (timeOffRequest.StartDate > timeOffRequest.EndDate)
                 throw new ArgumentException("Start date can not be later than End date");            
-            var originalTimeOff = await _timeOffRequestRepository.GetTimeOffByIdAsync(id);
+            var originalTimeOff = await _timeOffRequestRepository.FindByIdAsync(id);
             if (originalTimeOff == null)
                 throw new ArgumentException("Invalid time off id");
             originalTimeOff.StartDate = timeOffRequest.StartDate;
@@ -67,7 +67,7 @@ namespace WorkforceManagement.BLL.Services
         }
         public async Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync()
         {
-            var all = await _timeOffRequestRepository.GetAllTimeOffRequest();
+            var all = await _timeOffRequestRepository.GetAllAsync();
             List<TimeOffRequestReponseModel> result = new List<TimeOffRequestReponseModel>();
             if (all == null)
                 throw new KeyNotFoundException("There are no time off requests at the moment");

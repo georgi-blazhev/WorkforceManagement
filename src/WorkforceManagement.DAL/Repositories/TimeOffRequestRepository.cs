@@ -15,15 +15,6 @@ namespace WorkforceManagement.DAL.Repositories
             : base(context)
         {
         }
-
-        public async Task<List<TimeOffRequest>> GetAllTimeOffRequest()
-        {
-            return await GetAllAsync();
-        }
-        public async Task<TimeOffRequest> GetTimeOffByIdAsync(string id)
-        {
-            return await FindByIdAsync(id);
-        }
         public async Task<List<TimeOffRequest>> GetAllTimeOffsByUser(User user)
         // cannot cast implicitly, FindAsync returns a list anyway shouldnt be a problem
         {
@@ -62,8 +53,5 @@ namespace WorkforceManagement.DAL.Repositories
         {
             Edit(timeOffRequest);            
         }
-
-
-
     }
 }

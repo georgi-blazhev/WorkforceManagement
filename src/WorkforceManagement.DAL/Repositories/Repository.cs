@@ -10,7 +10,7 @@ using WorkforceManagement.DAL.IRepositories;
 
 namespace WorkforceManagement.DAL.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : AbstractEntity
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : AbstractEntity
     {
         protected readonly DatabaseContext _dataContext;
         protected readonly DbSet<TEntity> _entities;
