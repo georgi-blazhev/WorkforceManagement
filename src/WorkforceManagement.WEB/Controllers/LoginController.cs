@@ -6,7 +6,7 @@ using WorkforceManagement.BLL.IServices;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/login")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LoginController : Controller
     {

@@ -42,7 +42,7 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
             if (timeOffRequest == null)
             {
                 context.Fail();
-                await System.Threading.Tasks.Task.CompletedTask;
+                await Task.CompletedTask;
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
                 context.Succeed(requirement);
             }
 
-            await System.Threading.Tasks.Task.CompletedTask;
+            await Task.CompletedTask;
             return;
         }
     }

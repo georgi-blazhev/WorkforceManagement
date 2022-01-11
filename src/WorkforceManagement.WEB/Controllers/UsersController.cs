@@ -9,9 +9,9 @@ using WorkforceManagment.Models.DTO.Responses;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/users")]
-    [Authorize(Roles = "Admin")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;

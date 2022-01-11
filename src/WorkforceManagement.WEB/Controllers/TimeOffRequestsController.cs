@@ -11,8 +11,8 @@ using WorkforceManagement.BLL.Services;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/timeoffrequests")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TimeOffRequestsController : ControllerBase
     {
         private readonly ITimeOffRequestService _timeOffRequestService;
@@ -25,7 +25,7 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpGet]
-        [Route("/requests/all")]
+        [Route("All")]
         public async Task<List<TimeOffRequestReponseModel>> GetAll()
         {
             var all = await _timeOffRequestService.GetAllTimeOffsAsync();
@@ -52,7 +52,6 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpPost]
-        [Route("/requests/create")]
         public async Task<IActionResult> PostTimeOff(CreateTimeOffRequestModel timeOffRequestModel)
         {
             var currentUser = await _userService.GetCurrentUser(User);
@@ -60,18 +59,16 @@ namespace WorkforceManagement.WEB.Controllers
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpPut("{Id}")]
         [Authorize("TimeOffRequestAdminOrCreator")]
-        [Route("/requests/edit={Id}")]
         public async Task<IActionResult> PutTimeOFf(EditTimeOffRequestModel timeOffRequestModel, string Id)
         {
             await _timeOffRequestService.EditTimeOff(timeOffRequestModel, Id);
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         [Authorize("TimeOffRequestAdminOrCreator")]
-        [Route("/requests/delete={Id}")]
         public async Task<IActionResult> DeleteTimeOff(string Id)
         {
             await _timeOffRequestService.DeleteTimeOffAsync(Id);

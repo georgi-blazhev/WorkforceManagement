@@ -10,9 +10,9 @@ using WorkforceManagment.Models.DTO.Responses;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/teams")]
-    [Authorize(Roles = "Admin")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService _teamService;
@@ -22,59 +22,9 @@ namespace WorkforceManagement.WEB.Controllers
             _teamService = teamService;
         }
 
-        [HttpPost]
-        [Route("/create/team")]
-        public void Create(CreateTeamModel team)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.CreateTeam(team.Title);
-            }
-        }
-
-        [HttpPut]
-        [Route("/update/{teamId}")]
-        public void Edit(string id, EditTeamModel team)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.EditTeam(id, team.Title, team.Description);
-            }
-        }
-
-        [HttpDelete]
-        [Route("/delete/{teamId}")]
-        public void Delete(string id)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.DeleteTeam(id);
-            }
-        }
-
-        [HttpPost]
-        [Route("/assign/{userId}")]
-        public void AssignUserToTeam(User user, string teamId)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.AssignUserToTeam(user, teamId);
-            }
-        }
-
-        [HttpDelete]
-        [Route("/remove/{userId}")]
-        public void DeleteUserFromTeam(User user, string teamId)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.DeleteUserFromTeam(user, teamId);
-            }
-        }
-
         [HttpGet]
-        [Route("/teams")]
-        public async Task<List<TeamResponseModel>> GetAllTeams()
+        [Route("All")]
+        public async Task<List<TeamResponseModel>> GetAll()
         {
             var teams = new List<TeamResponseModel>();
             var teamsFromDb = await _teamService.GetAllTeamsAsync();
@@ -92,7 +42,7 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpGet]
-        [Route("/members")]
+        [Route("{teamId}/Members")]
         public async Task<List<UserResponseModel>> GetMembers(string teamId)
         {
             var users = new List<UserResponseModel>();
@@ -110,6 +60,53 @@ namespace WorkforceManagement.WEB.Controllers
             }
 
             return users;
+        }
+
+        [HttpPost]
+        public void Create(CreateTeamModel team) // TODO: Do we need a whole model just to pass a single property?
+        {
+            if (ModelState.IsValid)
+            {
+                _teamService.CreateTeam(team.Title);
+            }
+        }
+
+        [HttpPut("{teamId}")]
+        public void Edit(string teamId, EditTeamModel team)
+        {
+            if (ModelState.IsValid)
+            {
+                _teamService.EditTeam(teamId, team.Title, team.Description);
+            }
+        }
+
+        [HttpDelete("{teamId}")]
+        public void Delete(string teamId)
+        {
+            if (ModelState.IsValid)
+            {
+                _teamService.DeleteTeam(teamId);
+            }
+        }
+
+        [HttpPost]
+        [Route("{teamId}/Assign/{userId}")]
+        public void AssignUserToTeam(User user, string teamId) // TODO: How are you passing a whole user?
+        {
+            if (ModelState.IsValid)
+            {
+                _teamService.AssignUserToTeam(user, teamId);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{teamId}/Unassign/{userId}")]
+        public void DeleteUserFromTeam(User user, string teamId)
+        {
+            if (ModelState.IsValid)
+            {
+                _teamService.DeleteUserFromTeam(user, teamId);
+            }
         }
     }
 }
