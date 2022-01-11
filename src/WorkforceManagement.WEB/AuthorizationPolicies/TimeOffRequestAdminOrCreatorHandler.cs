@@ -37,7 +37,27 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
 
             var allTimeOffRequests = await _timeOffRequestService.GetAllTimeOffsAsync();
 
-            //TimeOffRequest timeOffRequest = allTimeOffRequests.FirstOrDefault(t => t.)
+            TimeOffRequest timeOffRequest = allTimeOffRequests.FirstOrDefault(t => t.Id == timeOffRequestId);
+
+            if (timeOffRequest == null)
+            {
+                context.Fail();
+                await System.Threading.Tasks.Task.CompletedTask;
+                return;
+            }
+
+            if (timeOffRequest.CreatorId == current.Id)
+            {
+                context.Succeed(requirement);
+            }
+
+            if (_userManager.GetUserRolesAsync(current).Result.Contains("Admin"))
+            {
+                context.Succeed(requirement);
+            }
+
+            await System.Threading.Tasks.Task.CompletedTask;
+            return;
         }
     }
 }

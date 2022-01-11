@@ -60,7 +60,8 @@ namespace WorkforceManagement.WEB.Controllers
             return NoContent();
         }
 
-        [HttpPut]       
+        [HttpPut]
+        [Authorize("TimeOffRequestAdminOrCreator")]
         [Route("/requests/edit={Id}")]
         public async Task<IActionResult> PutTimeOFf(EditTimeOffRequestModel timeOffRequestModel, string Id)
         {
@@ -69,6 +70,7 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpDelete]
+        [Authorize("TimeOffRequestAdminOrCreator")]
         [Route("/requests/delete={Id}")]
         public async Task<IActionResult> DeleteTimeOff(string Id)
         {

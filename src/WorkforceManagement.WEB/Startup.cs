@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagement.DAL.IRepositories;
 using WorkforceManagement.DAL.Repositories;
+using WorkforceManagement.WEB.AuthorizationPolicies;
 using WorkforceManagement.WEB.Middleware;
 
 namespace WorkforceManagement.WEB
@@ -107,7 +109,14 @@ namespace WorkforceManagement.WEB
 
 
             //Register Auth services
-            services.AddAuthorization()
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("TimeOffRequestAdminOrCreator", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new TimeOffRequestAdminOrCreatorRequirement());
+                });
+            })
                 .AddAuthentication(options =>
                 {
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -119,6 +128,8 @@ namespace WorkforceManagement.WEB
                     options.Authority = "https://localhost:5001";
                     options.Audience = "https://localhost:5001/resources";
                 });
+
+            services.AddTransient<IAuthorizationHandler, TimeOffRequestAdminOrCreatorHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
