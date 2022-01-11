@@ -14,11 +14,11 @@ namespace WorkforceManagement.BLL.Services
     public class TimeOffRequestService : ITimeOffRequestService
     {
         private readonly ITimeOffRequestRepository _timeOffRequestRepository;
-        private readonly IUserManager _userManager;
-        public TimeOffRequestService(ITimeOffRequestRepository timeOffRequestRepository, IUserManager userManager)
+        private readonly IUserService _userService;
+        public TimeOffRequestService(ITimeOffRequestRepository timeOffRequestRepository, IUserService userService)
         {
             _timeOffRequestRepository = timeOffRequestRepository;
-            _userManager = userManager;
+            _userService = userService;
         }
 
         public async Task CreateTimeOffAsync(CreateTimeOffRequestModel timeOffRequest) // TODO: need current user function so i can assign creatorId

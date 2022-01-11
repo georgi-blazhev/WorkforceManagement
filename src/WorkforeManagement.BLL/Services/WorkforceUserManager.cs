@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
@@ -49,6 +50,10 @@ namespace WorkforceManagement.BLL.Services
         public async Task CreateUserAsync(User user, string password)
         {
             await CreateAsync(user, password);
+        }
+        public async Task<User> GetCurrentUser(ClaimsPrincipal principal)
+        {
+            return await Users.FirstOrDefaultAsync(u => u.UserName == principal.Identities.ToList()[0].Name);            
         }
         public async Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword)
         {
