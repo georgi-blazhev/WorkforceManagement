@@ -25,12 +25,13 @@ namespace WorkforceManagement.WEB.Controllers
         [Route("All")]
         public async Task<List<UserResponseModel>> AllUsers()
         {
-            List<User> users = await _userService.GetAllUsersAsync();
+            List<User> allUsers = await _userService.GetAllUsersAsync();
             List<UserResponseModel> result = new();
-            foreach (var user in users)
+            foreach (var user in allUsers)
             {
                 result.Add(new UserResponseModel()
                 {
+                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     FirstName = user.FirstName,
@@ -44,7 +45,8 @@ namespace WorkforceManagement.WEB.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Register(CreateUserModel model)
         {
-            bool userWasCreated = await _userService.CreateUserAsync(model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
+            bool userWasCreated = await _userService.CreateUserAsync
+                (model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
             if (userWasCreated) return Ok("User was successfully registered! ");
             return BadRequest("A User with such Email or Username already exsists! ");
         }
@@ -60,10 +62,10 @@ namespace WorkforceManagement.WEB.Controllers
 
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Admin")]
-        public async Task Delete(string userId)
+        public async Task<ActionResult> Delete(string userId)
         {
             await _userService.DeleteUserAsync(userId);
+            return Ok("User was successfully deleted! ");
         }
     }
-
 }
