@@ -11,14 +11,9 @@ namespace WorkforceManagement.DAL.Repositories
 {
     public class TimeOffRequestRepository : Repository<TimeOffRequest>, ITimeOffRequestRepository
     {
-        private readonly DatabaseContext _context;
-        private readonly ITeamRepository<Team> _teamRepository;
-
-        public TimeOffRequestRepository(DatabaseContext context, ITeamRepository<Team> teamRepository)
+        public TimeOffRequestRepository(DatabaseContext context)
             : base(context)
         {
-            _context = context;
-            _teamRepository = teamRepository;
         }
 
         public async Task<List<TimeOffRequest>> GetAllTimeOffRequest()
@@ -38,26 +33,26 @@ namespace WorkforceManagement.DAL.Repositories
         public async Task CreateTimeOffAsync(TimeOffRequest timeOffRequest)
         {
             await CreateAsync(timeOffRequest);
-            var teams = await _teamRepository.FindAsync(t => t.Members.Any(u=> u.Id == timeOffRequest.CreatorId));
+            var teams = _dataContext.Teams.Where(t => t.Members.Any(u=> u.Id == timeOffRequest.CreatorId));
             // will need the newly created timeoffrequest id later on so i search it in the database
-             var update = _context.TimeOffRequests.FirstOrDefault(
+             var update = _dataContext.TimeOffRequests.FirstOrDefault(
                t => t.CreatorId == timeOffRequest.CreatorId && t.StartDate == timeOffRequest.StartDate && t.EndDate == timeOffRequest.EndDate);
             foreach (var team in teams)
             {           
                  UserTimeOffRequest utr = new();
                  utr.ApproverId = team.TeamLeaderId;
                  utr.TimeOffRequestId = update.Id;
-                 await _context.UserTimeOffRequests.AddAsync(utr);
+                 await _dataContext.UserTimeOffRequests.AddAsync(utr);
             }
              await SaveChangesAsync();
         }
 
         public async Task DeleteTimeOffAsync(TimeOffRequest timeOffRequest)
         {
-            var utrs = _context.UserTimeOffRequests.Where(utr => utr.TimeOffRequestId == timeOffRequest.Id);
+            var utrs = _dataContext.UserTimeOffRequests.Where(utr => utr.TimeOffRequestId == timeOffRequest.Id);
             foreach (var utr in utrs)
             {
-                _context.UserTimeOffRequests.Remove(utr);
+                _dataContext.UserTimeOffRequests.Remove(utr);
             }
             Delete(timeOffRequest);
             await SaveChangesAsync();
