@@ -25,12 +25,14 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpGet]
+        [Route("/requests/all")]
         public async Task<List<TimeOffRequestReponseModel>> GetAll()
         {
             return await _timeOffRequestService.GetAllTimeOffsAsync();
         }
 
         [HttpPost]
+        [Route("/requests/create")]
         public async Task<IActionResult> PostTimeOff(CreateTimeOffRequestModel timeOffRequestModel)
         {
             var currentUser = await _userService.GetCurrentUser(User);
@@ -38,14 +40,16 @@ namespace WorkforceManagement.WEB.Controllers
             return NoContent();
         }
 
-        [HttpPut("{Id}")]        
+        [HttpPut]       
+        [Route("/requests/edit={Id}")]
         public async Task<IActionResult> PutTimeOFf(EditTimeOffRequestModel timeOffRequestModel, string Id)
         {
             await _timeOffRequestService.EditTimeOff(timeOffRequestModel, Id);
             return NoContent();
         }
 
-        [HttpDelete("{Id}")]
+        [HttpDelete]
+        [Route("/requests/delete={Id}")]
         public async Task<IActionResult> DeleteTimeOff(string Id)
         {
             await _timeOffRequestService.DeleteTimeOffAsync(Id);

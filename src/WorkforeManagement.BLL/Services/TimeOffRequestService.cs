@@ -23,15 +23,19 @@ namespace WorkforceManagement.BLL.Services
         {            
             if (timeOffRequest.StartDate > timeOffRequest.EndDate)
                 throw new ArgumentException("Start date can not be later than End date");
+
             if (user == null)
                 throw new ArgumentException("Invalid user");
+
             var currentTimeOffs = await _timeOffRequestRepository.GetAllTimeOffsByUser(user);
+
             if (currentTimeOffs != null &&  currentTimeOffs.Any(t =>
               (t.StartDate > timeOffRequest.StartDate && t.StartDate < timeOffRequest.EndDate && t.Status == Status.Approved) ||
               // user already has an approved timeoffrequest that starts during the new req
               t.EndDate > timeOffRequest.StartDate && t.EndDate < timeOffRequest.EndDate && t.Status == Status.Approved))
                 // user already has an approved timeoffreq that ends during new req
                 throw new ArgumentException("Time period overlaps with another time off request");
+
             TimeOffRequest newTimeOff = new TimeOffRequest();
             newTimeOff.StartDate = timeOffRequest.StartDate;
             newTimeOff.EndDate = timeOffRequest.EndDate;
@@ -41,36 +45,46 @@ namespace WorkforceManagement.BLL.Services
             newTimeOff.CreatedAt = DateTime.Now;
             newTimeOff.LastChange = DateTime.Now;
             newTimeOff.CreatorId = user.Id;
+
             await _timeOffRequestRepository.CreateTimeOffAsync(newTimeOff);
         }
         public async Task DeleteTimeOffAsync(string id)
         {
             var timeOff = await _timeOffRequestRepository.FindByIdAsync(id);
+
             if (timeOff == null)
                 throw new ArgumentException("Invalid time off id");
+
             await _timeOffRequestRepository.DeleteTimeOffAsync(timeOff);
         }
         public async Task EditTimeOff(EditTimeOffRequestModel timeOffRequest, string id)
         { // check dates 
             if (timeOffRequest.StartDate > timeOffRequest.EndDate)
-                throw new ArgumentException("Start date can not be later than End date");            
+                throw new ArgumentException("Start date can not be later than End date"); 
+            
             var originalTimeOff = await _timeOffRequestRepository.FindByIdAsync(id);
+
             if (originalTimeOff == null)
                 throw new ArgumentException("Invalid time off id");
+
             originalTimeOff.StartDate = timeOffRequest.StartDate;
             originalTimeOff.EndDate = timeOffRequest.EndDate;
             originalTimeOff.Reason = timeOffRequest.Reason;
             originalTimeOff.Type = timeOffRequest.Type;
             originalTimeOff.LastChange = DateTime.Now;
+
             _timeOffRequestRepository.EditTimeOff(originalTimeOff);
                 
         }
         public async Task<List<TimeOffRequestReponseModel>> GetAllTimeOffsAsync()
         {
             var all = await _timeOffRequestRepository.GetAllAsync();
+
             List<TimeOffRequestReponseModel> result = new List<TimeOffRequestReponseModel>();
+
             if (all == null)
                 throw new KeyNotFoundException("There are no time off requests at the moment");
+
             foreach (var tmr in all)
             {
                 result.Add(new TimeOffRequestReponseModel()
