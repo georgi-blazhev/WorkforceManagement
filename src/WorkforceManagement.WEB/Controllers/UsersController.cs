@@ -10,6 +10,7 @@ using WorkforceManagment.Models.DTO.Responses;
 namespace WorkforceManagement.WEB.Controllers
 {
     [Route("api/users")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class UsersController : ControllerBase
     {

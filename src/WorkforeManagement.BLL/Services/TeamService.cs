@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
@@ -9,10 +10,10 @@ namespace WorkforceManagement.BLL.Services
 {
     public class TeamService : ITeamService
     {
-        private readonly IRepository<Team> _teamRepository;
+        private readonly ITeamRepository _teamRepository;
         private readonly IUserManager _userManager;
 
-        public TeamService(IRepository<Team> teamRepository, IUserManager userManager)
+        public TeamService(ITeamRepository teamRepository, IUserManager userManager)
         {
             _teamRepository = teamRepository;
             _userManager = userManager;
@@ -20,7 +21,7 @@ namespace WorkforceManagement.BLL.Services
 
         public async Task CreateTeam(string title)
         {
-            var team = _teamRepository.FindByNameAsync(title);
+            var team =  _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
             if (team != null)
             {
                 throw new DuplicateNameException("A team with this title already exist");
@@ -63,9 +64,9 @@ namespace WorkforceManagement.BLL.Services
             return await _teamRepository.FindByIdAsync(id);
         }
 
-        public async Task<Team> GetTeamByTitleAsync(string title)
+        public Team GetTeamByTitleAsync(string title)
         {
-            return await _teamRepository.FindByNameAsync(title);
+            return _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
         }
 
         public async Task<List<Team>> GetAllTeamsAsync()

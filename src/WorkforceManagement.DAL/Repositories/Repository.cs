@@ -10,7 +10,7 @@ using WorkforceManagement.DAL.IRepositories;
 
 namespace WorkforceManagement.DAL.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : AbstractEntity
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : AbstractEntity
     {
         protected readonly DatabaseContext _dataContext;
         protected readonly DbSet<TEntity> _entities;
@@ -28,15 +28,6 @@ namespace WorkforceManagement.DAL.Repositories
             if (entity != null) return entity;
 
             throw new KeyNotFoundException($"An entity with the given ID does not exist!");
-        }
-
-        public async Task<TEntity> FindByNameAsync(string title)
-        {
-            TEntity entity = await _entities.FindAsync(title);
-
-            if (entity != null) return entity;
-
-            throw new KeyNotFoundException($"An entity with the given name does not exist!");
         }
 
         public virtual async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
@@ -77,11 +68,6 @@ namespace WorkforceManagement.DAL.Repositories
             _entities.RemoveRange(entities);
             _dataContext.SaveChanges();
 
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _dataContext.SaveChangesAsync();
         }
     }
 }

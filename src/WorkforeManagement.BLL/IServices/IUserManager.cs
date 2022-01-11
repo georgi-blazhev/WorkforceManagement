@@ -16,6 +16,7 @@ namespace WorkforceManagement.BLL.IServices
         Task<User> FindByEmailAsync(string name);
         Task<IdentityResult> AddToRoleAsync(User user, string role);
         Task<List<User>> GetAllAsync();
+        Task<User> GetCurrentUser(ClaimsPrincipal principal);
         Task<List<string>> GetUserRolesAsync(User user);
         Task CreateUserAsync(User user, string password);
         Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword);

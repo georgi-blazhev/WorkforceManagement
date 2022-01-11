@@ -2,7 +2,7 @@
 
 namespace WorkforceManagement.DAL.IRepositories
 {
-    public interface ITeamRepository<T> : IRepository<Team>
+    public interface ITeamRepository : IRepository<Team>
     {
     }
 }

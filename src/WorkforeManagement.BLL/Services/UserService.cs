@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
@@ -13,11 +14,14 @@ namespace WorkforceManagement.BLL.Services
     {
         private readonly IUserManager _userManager;
 
-        public UserService(IUserManager userManager, ITeamRepository<Team> teamRepository)
+        public UserService(IUserManager userManager)
         {
             _userManager = userManager;
         }
-
+        public async Task<User> GetCurrentUser(ClaimsPrincipal principal)
+        {
+            return await _userManager.GetCurrentUser(principal);
+        }
         public async Task<User> GetUserByIdAsync(string userId)
         {
             return await _userManager.FindByIdAsync(userId);
