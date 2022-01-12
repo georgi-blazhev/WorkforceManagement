@@ -19,33 +19,35 @@ namespace WorkforceManagement.BLL.Services
             _userManager = userManager;
         }
 
-        public async Task CreateTeamAsync(string title, string description)
+        public async Task<bool> CreateTeamAsync(string title, string description)
         {
             var team =  _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
-            if (team != null)
-            {
-                throw new DuplicateNameException("A team with this title already exist");
-            }
+            if (team != null) return false;
 
             await _teamRepository.CreateAsync(new Team() { Title = title, Description = description });
+            return true;
         }
 
-        public async Task EditTeam(string id, string title, string description)
+        public async Task<bool> EditTeamAsync(string id, string title, string description)
         {
-            var teamToEdit = await _teamRepository.FindByIdAsync(id);
+            var teamToEdit = _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
+            if (teamToEdit != null) return false;
+
+            teamToEdit = await _teamRepository.FindByIdAsync(id);
             teamToEdit.Title = title;
             teamToEdit.Description = description;
 
             _teamRepository.Edit(teamToEdit);
+            return true;
         }
 
-        public async Task DeleteTeam(string id)
+        public async Task DeleteTeamAsync(string id)
         {
             var team = await _teamRepository.FindByIdAsync(id);
             _teamRepository.Delete(team);
         }
 
-        public async Task AssignUserToTeam(string userId, string teamId)
+        public async Task AssignUserToTeamAsync(string userId, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
             var user = await _userManager.FindByIdAsync(userId);
@@ -53,7 +55,7 @@ namespace WorkforceManagement.BLL.Services
             team.Members.Add(user);
         }
 
-        public async Task UnassignUserFromTeam(string userId, string teamId)
+        public async Task UnassignUserFromTeamAsync(string userId, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
             var user = await _userManager.FindByIdAsync(userId);

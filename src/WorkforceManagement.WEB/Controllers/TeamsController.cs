@@ -65,50 +65,42 @@ namespace WorkforceManagement.WEB.Controllers
         }
 
         [HttpPost]
-        public void Create(CreateTeamModel team)
+        public async Task<IActionResult> Create(CreateTeamModel team)
         {
-            if (ModelState.IsValid)
-            {
-                _teamService.CreateTeamAsync(team.Title, team.Description);
-            }
+            bool teamWasCreated = await _teamService.CreateTeamAsync(team.Title, team.Description);
+            if (teamWasCreated) return Ok("Team was successfully created! ");
+            return BadRequest("A Team with such Title already exsists! ");
         }
 
         [HttpPut("{teamId}")]
-        public void Edit(string teamId, EditTeamModel team)
+        public async Task<IActionResult> Edit(string teamId, EditTeamModel team)
         {
-            if (ModelState.IsValid)
-            {
-                _teamService.EditTeam(teamId, team.Title, team.Description);
-            }
+            bool teamWasEdited = await _teamService.EditTeamAsync(teamId, team.Title, team.Description);
+            if (teamWasEdited) return Ok("Team was successfully edited! ");
+            return BadRequest("A Team with such Title already exsists! ");
         }
 
         [HttpDelete("{teamId}")]
-        public void Delete(string teamId)
+        public async Task<IActionResult> Delete(string teamId)
         {
-            if (ModelState.IsValid)
-            {
-                _teamService.DeleteTeam(teamId);
-            }
+            await _teamService.DeleteTeamAsync(teamId);
+            return Ok("Team was successfully deleted! ");
         }
 
         [HttpPost]
         [Route("{teamId}/Assign/{userId}")]
-        public void AssignUserToTeam(string userId, string teamId)
+        public async Task<IActionResult> AssignUserToTeam(string userId, string teamId)
         {
-            if (ModelState.IsValid)
-            {
-                _teamService.AssignUserToTeam(userId, teamId);
-            }
+            await _teamService.AssignUserToTeamAsync(userId, teamId);
+            return Ok("User was successfully added to the Team! ");
         }
 
         [HttpDelete]
         [Route("{teamId}/Unassign/{userId}")]
-        public void UnassignUserFromTeam(string userId, string teamId)
+        public async Task<IActionResult> UnassignUserFromTeam(string userId, string teamId)
         {
-            if (ModelState.IsValid)
-            {
-                _teamService.UnassignUserFromTeam(userId, teamId);
-            }
+            await _teamService.UnassignUserFromTeamAsync(userId, teamId);
+            return Ok("User was successfully removed from the Team! ");
         }
     }
 }

@@ -6,11 +6,11 @@ namespace WorkforceManagement.BLL.IServices
 {
     public interface ITeamService
     {
-        Task CreateTeamAsync(string title, string description);
-        Task EditTeam(string id, string title, string description);
-        Task DeleteTeam(string id);
-        Task AssignUserToTeam(string userId, string teamId);
-        Task UnassignUserFromTeam(string userId, string teamId);
+        Task<bool> CreateTeamAsync(string title, string description);
+        Task<bool> EditTeamAsync(string id, string title, string description);
+        Task DeleteTeamAsync(string id);
+        Task AssignUserToTeamAsync(string userId, string teamId);
+        Task UnassignUserFromTeamAsync(string userId, string teamId);
         Task<Team> GetTeamByIdAsync(string id);
         Team GetTeamByTitleAsync(string title);
         Task<List<Team>> GetAllTeamsAsync();
