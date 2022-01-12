@@ -16,11 +16,13 @@ namespace WorkforceManagement.WEB.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService _teamService;
+        private readonly IUserService _userService;
 
-        public TeamsController(ITeamService teamService) : base()
+        public TeamsController(ITeamService teamService, IUserService userService) : base()
         {
             _teamService = teamService;
-        }
+            _userService = userService;
+    }
 
         [HttpGet]
         [Route("All")]
@@ -67,7 +69,9 @@ namespace WorkforceManagement.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateTeamModel team)
         {
-            bool teamWasCreated = await _teamService.CreateTeamAsync(team.Title, team.Description);
+            var currentUser = await _userService.GetCurrentUser(User);
+
+            bool teamWasCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, team.TeamLeaderId, currentUser);
             if (teamWasCreated) return Ok("Team was successfully created! ");
             return BadRequest("A Team with such Title already exsists! ");
         }

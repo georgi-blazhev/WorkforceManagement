@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,12 +20,23 @@ namespace WorkforceManagement.BLL.Services
             _userManager = userManager;
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description)
+        public async Task<bool> CreateTeamAsync(string title, string description, string teamLeaderId, User currentUser)
         {
             var team =  _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
             if (team != null) return false;
 
-            await _teamRepository.CreateAsync(new Team() { Title = title, Description = description });
+            var teamLeader = await _userManager.FindByIdAsync(teamLeaderId); //TODO: Can anyone be a TeamLeader?
+            if (teamLeader == null) return false;
+
+            await _teamRepository.CreateAsync(new Team() 
+            {
+                Title = title, 
+                Description = description,
+                CreatedAt = DateTime.Now,
+                LastChange = DateTime.Now,
+                TeamLeader = teamLeader,
+                Creator = currentUser
+            });
             return true;
         }
 
@@ -52,7 +64,7 @@ namespace WorkforceManagement.BLL.Services
             var team = await _teamRepository.FindByIdAsync(teamId);
             var user = await _userManager.FindByIdAsync(userId);
 
-            team.Members.Add(user);
+            await _teamRepository.AssignUserToTeamAsync(user, team);
         }
 
         public async Task UnassignUserFromTeamAsync(string userId, string teamId)
@@ -60,7 +72,7 @@ namespace WorkforceManagement.BLL.Services
             var team = await _teamRepository.FindByIdAsync(teamId);
             var user = await _userManager.FindByIdAsync(userId);
 
-            team.Members.Remove(user);
+            await _teamRepository.UnssignUserToTeamAsync(user, team);
         }
 
         public async Task<Team> GetTeamByIdAsync(string id)
