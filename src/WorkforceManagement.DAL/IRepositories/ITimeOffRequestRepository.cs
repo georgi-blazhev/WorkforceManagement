@@ -11,5 +11,6 @@ namespace WorkforceManagement.DAL.Repositories
         Task DeleteTimeOffAsync(TimeOffRequest timeOffRequest);
         void EditTimeOff(TimeOffRequest timeOffRequest);
         Task<List<TimeOffRequest>> GetAllTimeOffsByUser(User user);
+        Task DeleteCollectionAsync(ICollection<TimeOffRequest> timeOffRequests);
     }
 }

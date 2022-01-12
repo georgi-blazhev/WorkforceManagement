@@ -73,6 +73,8 @@ namespace WorkforceManagement.BLL.Services
         public async Task DeleteUserAsync(string userId)
         {
             var userToBeDeleted = await _userManager.FindByIdAsync(userId);
+            var userTimeOffs = await _timeOffRequestRepository.GetAllTimeOffsByUser(userToBeDeleted);
+            await _timeOffRequestRepository.DeleteCollectionAsync(userTimeOffs);
             // TODO: Delete related information such as TimeOffRequests. Currently not working for users that have created TimeOffRequests
             // _timeOffRequestRepository.DeleteCollection(userToBeDeleted.TimeOffRequests)
             await _userManager.DeleteUserAsync(userToBeDeleted);

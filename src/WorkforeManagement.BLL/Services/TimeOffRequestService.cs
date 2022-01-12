@@ -81,5 +81,10 @@ namespace WorkforceManagement.BLL.Services
         {
             return await _timeOffRequestRepository.GetAllAsync();
         }
+        public async Task<List<TimeOffRequest>> GetTimeOffsByUserAsync(User user)
+        {
+            return await _timeOffRequestRepository.GetAllTimeOffsByUser(user);
+        }
+        
     }
 }

@@ -44,6 +44,27 @@ namespace WorkforceManagement.WEB.Controllers
             }
             return result;
         }
+        [HttpGet]
+        [Route("CurrentUser")]
+        public async Task<List<TimeOffReponseModel>> GetAllCurrentUser()
+        {
+            var currentUser = await _userService.GetCurrentUser(User);
+            var allTimeOffs = await _timeOffRequestService.GetTimeOffsByUserAsync(currentUser);
+            List<TimeOffReponseModel> result = new();
+
+            foreach (var timeOff in allTimeOffs)
+            {
+                result.Add(new TimeOffReponseModel()
+                {
+                    Id = timeOff.Id,
+                    StartDate = timeOff.StartDate,
+                    EndDate = timeOff.EndDate,
+                    Reason = timeOff.Reason,
+                    Type = timeOff.Type
+                });
+            }
+            return result;
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateTimeOffModel timeOffRequestModel)
