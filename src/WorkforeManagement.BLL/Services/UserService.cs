@@ -7,24 +7,23 @@ using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
 using WorkforceManagement.DAL.IRepositories;
+using WorkforceManagement.DAL.Repositories;
 
 namespace WorkforceManagement.BLL.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserManager _userManager;
+        private readonly ITimeOffRequestRepository _timeOffRequestRepository;
 
-        public UserService(IUserManager userManager)
+        public UserService(IUserManager userManager, ITimeOffRequestRepository timeOffRequestRepository)
         {
             _userManager = userManager;
+            _timeOffRequestRepository = timeOffRequestRepository;
         }
         public async Task<User> GetCurrentUser(ClaimsPrincipal principal)
         {
             return await _userManager.GetCurrentUser(principal);
-        }
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            return await _userManager.FindByIdAsync(userId);
         }
         public async Task<User> GetUserByNameAsync(string userName)
         {
@@ -37,10 +36,6 @@ namespace WorkforceManagement.BLL.Services
         public async Task<List<User>> GetAllUsersAsync()
         {
             return await _userManager.GetAllAsync();
-        }
-        public async Task<List<string>> GetRolesAsync(User user)
-        {
-            return await _userManager.GetUserRolesAsync(user);
         }
         public async Task<bool> CreateUserAsync(string userName, string eMail, string passWord, string firstName, string lastName, Role role)
         {
@@ -78,7 +73,8 @@ namespace WorkforceManagement.BLL.Services
         public async Task DeleteUserAsync(string userId)
         {
             var userToBeDeleted = await _userManager.FindByIdAsync(userId);
-            // TODO: Delete related information such as TimeOffRequests
+            // TODO: Delete related information such as TimeOffRequests. Currently not working for users that have created TimeOffRequests
+            // _timeOffRequestRepository.DeleteCollection(userToBeDeleted.TimeOffRequests)
             await _userManager.DeleteUserAsync(userToBeDeleted);
         }   
 
