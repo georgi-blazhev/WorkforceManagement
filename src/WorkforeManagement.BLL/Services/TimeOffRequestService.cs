@@ -20,7 +20,7 @@ namespace WorkforceManagement.BLL.Services
             _timeOffRequestRepository = timeOffRequestRepository;           
         }
 
-        public async Task CreateTimeOffAsync(CreateTimeOffRequestModel timeOffRequest,User user) // TODO: need current user function so i can assign creatorId
+        public async Task CreateTimeOffAsync(CreateTimeOffModel timeOffRequest,User user) // TODO: need current user function so i can assign creatorId
         {            
             if (timeOffRequest.StartDate > timeOffRequest.EndDate)
                 throw new ArgumentException("Start date can not be later than End date");
@@ -58,7 +58,7 @@ namespace WorkforceManagement.BLL.Services
 
             await _timeOffRequestRepository.DeleteTimeOffAsync(timeOff);
         }
-        public async Task EditTimeOff(EditTimeOffRequestModel timeOffRequest, string id)
+        public async Task EditTimeOffAsync(EditTimeOffModel timeOffRequest, string id)
         { // check dates 
             if (timeOffRequest.StartDate > timeOffRequest.EndDate)
                 throw new ArgumentException("Start date can not be later than End date"); 
@@ -81,5 +81,10 @@ namespace WorkforceManagement.BLL.Services
         {
             return await _timeOffRequestRepository.GetAllAsync();
         }
+        public async Task<List<TimeOffRequest>> GetTimeOffsByUserAsync(User user)
+        {
+            return await _timeOffRequestRepository.GetAllTimeOffsByUser(user);
+        }
+        
     }
 }

@@ -11,70 +11,82 @@ using WorkforceManagement.BLL.Services;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/timeoffrequests")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TimeOffRequestsController : ControllerBase
     {
         private readonly ITimeOffRequestService _timeOffRequestService;
         private readonly IUserService _userService;
 
-        public TimeOffRequestsController(ITimeOffRequestService timeOffRequestService,IUserService userService) : base()
+        public TimeOffRequestsController(ITimeOffRequestService timeOffRequestService, IUserService userService) : base()
         {
             _timeOffRequestService = timeOffRequestService;
             _userService = userService;
         }
 
         [HttpGet]
-        [Route("/requests/all")]
-        public async Task<List<TimeOffRequestReponseModel>> GetAll()
+        [Route("All")]
+        public async Task<List<TimeOffReponseModel>> GetAll()
         {
-            var all = await _timeOffRequestService.GetAllTimeOffsAsync();
+            var allTimeOffs = await _timeOffRequestService.GetAllTimeOffsAsync();
+            List<TimeOffReponseModel> result = new();
 
-            List<TimeOffRequestReponseModel> result = new List<TimeOffRequestReponseModel>();
-
-            if (all == null)
-
-                throw new KeyNotFoundException("There are no time off requests at the moment");
-
-            foreach (var tmr in all)
+            foreach (var timeOff in allTimeOffs)
             {
-                result.Add(new TimeOffRequestReponseModel()
+                result.Add(new TimeOffReponseModel()
                 {
-                    Id = tmr.Id.ToString(),
-                    StartDate = tmr.StartDate,
-                    EndDate = tmr.EndDate,
-                    Reason = tmr.Reason,
-                    Type = tmr.Type
+                    Id = timeOff.Id,
+                    StartDate = timeOff.StartDate,
+                    EndDate = timeOff.EndDate,
+                    Reason = timeOff.Reason,
+                    Type = timeOff.Type
+                });
+            }
+            return result;
+        }
+        [HttpGet]
+        [Route("CurrentUser")]
+        public async Task<List<TimeOffReponseModel>> GetAllCurrentUser()
+        {
+            var currentUser = await _userService.GetCurrentUser(User);
+            var allTimeOffs = await _timeOffRequestService.GetTimeOffsByUserAsync(currentUser);
+            List<TimeOffReponseModel> result = new();
 
+            foreach (var timeOff in allTimeOffs)
+            {
+                result.Add(new TimeOffReponseModel()
+                {
+                    Id = timeOff.Id,
+                    StartDate = timeOff.StartDate,
+                    EndDate = timeOff.EndDate,
+                    Reason = timeOff.Reason,
+                    Type = timeOff.Type
                 });
             }
             return result;
         }
 
         [HttpPost]
-        [Route("/requests/create")]
-        public async Task<IActionResult> PostTimeOff(CreateTimeOffRequestModel timeOffRequestModel)
+        public async Task<IActionResult> Create(CreateTimeOffModel timeOffRequestModel)
         {
             var currentUser = await _userService.GetCurrentUser(User);
-            await _timeOffRequestService.CreateTimeOffAsync(timeOffRequestModel,currentUser);
+            await _timeOffRequestService.CreateTimeOffAsync(timeOffRequestModel, currentUser);
+            return NoContent(); // TODO: Maybe it would be nice to return 201 Created on all our posts?
+        }
+
+        [HttpPut("{timeOffId}")]
+        [Authorize("TimeOffRequestAdminOrCreator")]
+        public async Task<IActionResult> Edit(EditTimeOffModel timeOffRequestModel, string timeOffId)
+        {
+            await _timeOffRequestService.EditTimeOffAsync(timeOffRequestModel, timeOffId);
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpDelete("{timeOffId}")]
         [Authorize("TimeOffRequestAdminOrCreator")]
-        [Route("/requests/edit={Id}")]
-        public async Task<IActionResult> PutTimeOFf(EditTimeOffRequestModel timeOffRequestModel, string Id)
+        public async Task<IActionResult> Delete(string timeOffId)
         {
-            await _timeOffRequestService.EditTimeOff(timeOffRequestModel, Id);
-            return NoContent();
-        }
-
-        [HttpDelete]
-        [Authorize("TimeOffRequestAdminOrCreator")]
-        [Route("/requests/delete={Id}")]
-        public async Task<IActionResult> DeleteTimeOff(string Id)
-        {
-            await _timeOffRequestService.DeleteTimeOffAsync(Id);
+            await _timeOffRequestService.DeleteTimeOffAsync(timeOffId);
             return NoContent();
         }
     }

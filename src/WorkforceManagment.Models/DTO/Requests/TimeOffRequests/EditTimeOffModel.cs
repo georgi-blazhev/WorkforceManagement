@@ -4,8 +4,9 @@ using WorkforceManagement.DAL.Entities;
 
 namespace WorkforceManagement.Models.DTO.Requests.TimeOffRequests
 {
-    public class CreateTimeOffRequestModel
+    public class EditTimeOffModel
     {
+
         [Required]
         public TimeOffRequestType Type { get; set; }
         [Required]
@@ -17,3 +18,4 @@ namespace WorkforceManagement.Models.DTO.Requests.TimeOffRequests
         public string Reason { get; set; }
     }
 }
+

@@ -33,7 +33,7 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
 
             User current = await _userService.GetUserByNameAsync(currentUserName);
 
-            Guid timeOffRequestId = Guid.Parse(_httpContextAccessor.HttpContext.GetRouteValue("Id").ToString());
+            Guid timeOffRequestId = Guid.Parse(_httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString());
 
             var allTimeOffRequests = await _timeOffRequestService.GetAllTimeOffsAsync();
 
@@ -42,7 +42,7 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
             if (timeOffRequest == null)
             {
                 context.Fail();
-                await System.Threading.Tasks.Task.CompletedTask;
+                await Task.CompletedTask;
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace WorkforceManagement.WEB.AuthorizationPolicies
                 context.Succeed(requirement);
             }
 
-            await System.Threading.Tasks.Task.CompletedTask;
+            await Task.CompletedTask;
             return;
         }
     }

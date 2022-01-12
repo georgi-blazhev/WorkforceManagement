@@ -10,98 +10,52 @@ using WorkforceManagment.Models.DTO.Responses;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/teams")]
-    [Authorize(Roles = "Admin")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class TeamsController : ControllerBase
     {
         private readonly ITeamService _teamService;
+        private readonly IUserService _userService;
 
-        public TeamsController(ITeamService teamService) : base()
+        public TeamsController(ITeamService teamService, IUserService userService) : base()
         {
             _teamService = teamService;
-        }
-
-        [HttpPost]
-        [Route("/create/team")]
-        public void Create(CreateTeamModel team)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.CreateTeam(team.Title);
-            }
-        }
-
-        [HttpPut]
-        [Route("/update/{teamId}")]
-        public void Edit(string id, EditTeamModel team)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.EditTeam(id, team.Title, team.Description);
-            }
-        }
-
-        [HttpDelete]
-        [Route("/delete/{teamId}")]
-        public void Delete(string id)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.DeleteTeam(id);
-            }
-        }
-
-        [HttpPost]
-        [Route("/assign/{userId}")]
-        public void AssignUserToTeam(User user, string teamId)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.AssignUserToTeam(user, teamId);
-            }
-        }
-
-        [HttpDelete]
-        [Route("/remove/{userId}")]
-        public void DeleteUserFromTeam(User user, string teamId)
-        {
-            if (ModelState.IsValid)
-            {
-                _teamService.DeleteUserFromTeam(user, teamId);
-            }
-        }
+            _userService = userService;
+    }
 
         [HttpGet]
-        [Route("/teams")]
-        public async Task<List<TeamResponseModel>> GetAllTeams()
+        [Route("All")]
+        public async Task<List<TeamResponseModel>> GetAll()
         {
-            var teams = new List<TeamResponseModel>();
-            var teamsFromDb = await _teamService.GetAllTeamsAsync();
+            var allTeams = await _teamService.GetAllTeamsAsync();
+            List<TeamResponseModel> teamModels = new();
 
-            foreach (var team in teamsFromDb)
+            foreach (var team in allTeams)
             {
-                teams.Add(new TeamResponseModel()
+                teamModels.Add(new TeamResponseModel()
                 {
+                    Id = team.Id,
                     Title = team.Title,
                     Description = team.Description,
                 });
             }
 
-            return teams;
+            return teamModels;
         }
 
         [HttpGet]
-        [Route("/members")]
+        [Route("{teamId}/Members")]
         public async Task<List<UserResponseModel>> GetMembers(string teamId)
         {
-            var users = new List<UserResponseModel>();
-            var usersFromDb = await _teamService.GetAllMembersOfTeam(teamId);
+            var allUsers = await _teamService.GetAllMembersOfTeam(teamId);
+            List<UserResponseModel> members = new();
 
-            foreach (var user in usersFromDb)
+            foreach (var user in allUsers)
             {
-                users.Add(new UserResponseModel()
+                members.Add(new UserResponseModel()
                 {
+                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     FirstName = user.FirstName,
@@ -109,7 +63,48 @@ namespace WorkforceManagement.WEB.Controllers
                 });
             }
 
-            return users;
+            return members;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateTeamModel team)
+        {
+            var currentUser = await _userService.GetCurrentUser(User);
+
+            bool teamWasCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, team.TeamLeaderId, currentUser);
+            if (teamWasCreated) return Ok("Team was successfully created! ");
+            return BadRequest("A Team with such Title already exsists! ");
+        }
+
+        [HttpPut("{teamId}")]
+        public async Task<IActionResult> Edit(string teamId, EditTeamModel team)
+        {
+            bool teamWasEdited = await _teamService.EditTeamAsync(teamId, team.Title, team.Description);
+            if (teamWasEdited) return Ok("Team was successfully edited! ");
+            return BadRequest("A Team with such Title already exsists! ");
+        }
+
+        [HttpDelete("{teamId}")]
+        public async Task<IActionResult> Delete(string teamId)
+        {
+            await _teamService.DeleteTeamAsync(teamId);
+            return Ok("Team was successfully deleted! ");
+        }
+
+        [HttpPost]
+        [Route("{teamId}/Assign/{userId}")]
+        public async Task<IActionResult> AssignUserToTeam(string userId, string teamId)
+        {
+            await _teamService.AssignUserToTeamAsync(userId, teamId);
+            return Ok("User was successfully added to the Team! ");
+        }
+
+        [HttpDelete]
+        [Route("{teamId}/Unassign/{userId}")]
+        public async Task<IActionResult> UnassignUserFromTeam(string userId, string teamId)
+        {
+            await _teamService.UnassignUserFromTeamAsync(userId, teamId);
+            return Ok("User was successfully removed from the Team! ");
         }
     }
 }

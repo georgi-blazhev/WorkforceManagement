@@ -1,21 +1,15 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using WorkforceManagement.DAL.Entities;
 
-namespace WorkforceManagement.Models.DTO.Requests.TimeOffRequests
+namespace WorkforceManagement.Models.DTO.Responses
 {
-    public class EditTimeOffRequestModel
+    public class TimeOffReponseModel
     {
-
-        [Required]
+        public Guid Id { get; set; }
         public TimeOffRequestType Type { get; set; }
-        [Required]
         public DateTime StartDate { get; set; }
-        [Required]
         public DateTime EndDate { get; set; }
-        [Required]
-        [MaxLength(200)]
         public string Reason { get; set; }
+        public Status Status { get; set; }
     }
 }
-

@@ -11,5 +11,8 @@ namespace WorkforceManagement.Models.DTO.Requests.TeamRequests
 
         [Required]
         public string Description { get; set; }
+
+        [Required]
+        public string TeamLeaderId { get; set; }
     }
 }

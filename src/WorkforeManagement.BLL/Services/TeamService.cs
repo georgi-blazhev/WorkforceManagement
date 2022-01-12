@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,44 +20,59 @@ namespace WorkforceManagement.BLL.Services
             _userManager = userManager;
         }
 
-        public async Task CreateTeam(string title)
+        public async Task<bool> CreateTeamAsync(string title, string description, string teamLeaderId, User currentUser)
         {
             var team =  _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
-            if (team != null)
-            {
-                throw new DuplicateNameException("A team with this title already exist");
-            }
+            if (team != null) return false;
 
-            await _teamRepository.CreateAsync(new Team() { Title = title });
+            var teamLeader = await _userManager.FindByIdAsync(teamLeaderId); //TODO: Can anyone be a TeamLeader?
+            if (teamLeader == null) return false;
+
+            await _teamRepository.CreateAsync(new Team() 
+            {
+                Title = title, 
+                Description = description,
+                CreatedAt = DateTime.Now,
+                LastChange = DateTime.Now,
+                TeamLeader = teamLeader,
+                Creator = currentUser
+            });
+            return true;
         }
 
-        public async Task EditTeam(string id, string title, string description)
+        public async Task<bool> EditTeamAsync(string id, string title, string description)
         {
-            var teamToEdit = await _teamRepository.FindByIdAsync(id);
+            var teamToEdit = _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
+            if (teamToEdit != null) return false;
+
+            teamToEdit = await _teamRepository.FindByIdAsync(id);
             teamToEdit.Title = title;
             teamToEdit.Description = description;
 
             _teamRepository.Edit(teamToEdit);
+            return true;
         }
 
-        public async Task DeleteTeam(string id)
+        public async Task DeleteTeamAsync(string id)
         {
             var team = await _teamRepository.FindByIdAsync(id);
             _teamRepository.Delete(team);
         }
 
-        public async Task AssignUserToTeam(User user, string teamId)
+        public async Task AssignUserToTeamAsync(string userId, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
 
-            team.Members.Add(user);
+            await _teamRepository.AssignUserToTeamAsync(user, team);
         }
 
-        public async Task DeleteUserFromTeam(User user, string teamId)
+        public async Task UnassignUserFromTeamAsync(string userId, string teamId)
         {
             var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
 
-            team.Members.Remove(user);
+            await _teamRepository.UnssignUserToTeamAsync(user, team);
         }
 
         public async Task<Team> GetTeamByIdAsync(string id)

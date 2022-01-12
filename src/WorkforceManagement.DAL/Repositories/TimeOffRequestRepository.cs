@@ -24,7 +24,7 @@ namespace WorkforceManagement.DAL.Repositories
         public async Task CreateTimeOffAsync(TimeOffRequest timeOffRequest)
         {
             await CreateAsync(timeOffRequest);
-            var teams = _dataContext.Teams.Where(t => t.Members.Any(u=> u.Id == timeOffRequest.CreatorId));
+            var teams = _dataContext.Teams.Where(t => t.Members.Any(u=> u.Id == timeOffRequest.CreatorId)).ToList();
             // will need the newly created timeoffrequest id later on so i search it in the database
              var update = _dataContext.TimeOffRequests.FirstOrDefault(
                t => t.CreatorId == timeOffRequest.CreatorId && t.StartDate == timeOffRequest.StartDate && t.EndDate == timeOffRequest.EndDate);
@@ -52,6 +52,13 @@ namespace WorkforceManagement.DAL.Repositories
         public void EditTimeOff(TimeOffRequest timeOffRequest)
         {
             Edit(timeOffRequest);            
+        }
+        public async Task DeleteCollectionAsync(ICollection<TimeOffRequest> timeOffRequests)
+        {
+            if (timeOffRequests == null || timeOffRequests.Count == 0)
+                return;
+            foreach (var timeOff in timeOffRequests)
+                await DeleteTimeOffAsync(timeOff);
         }
     }
 }
