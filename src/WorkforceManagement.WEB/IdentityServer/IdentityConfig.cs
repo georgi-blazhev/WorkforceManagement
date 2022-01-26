@@ -1,12 +1,11 @@
 ﻿using IdentityServer4.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace WorkforceManagement.WEB
 {
+    [ExcludeFromCodeCoverage]
     public class IdentityConfig
     {
         public static IEnumerable<Client> Clients =>

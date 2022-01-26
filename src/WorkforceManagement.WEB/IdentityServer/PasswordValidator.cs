@@ -1,8 +1,7 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Validation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
@@ -10,6 +9,7 @@ using WorkforceManagement.DAL.Entities;
 
 namespace WorkforceManagement.WEB
 {
+    [ExcludeFromCodeCoverage]
     public class PasswordValidator : IResourceOwnerPasswordValidator
     {
         private readonly IUserManager _userManager;

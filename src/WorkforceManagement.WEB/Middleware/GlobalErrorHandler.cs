@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace WorkforceManagement.WEB.Middleware
 {
+    [ExcludeFromCodeCoverage]
     public class GlobalErrorHandler
     {
         private readonly RequestDelegate _next;
@@ -33,6 +34,19 @@ namespace WorkforceManagement.WEB.Middleware
                     case KeyNotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
+
+                    case InvalidOperationException:
+                        response.StatusCode = (int)HttpStatusCode.Conflict;
+                        break;
+
+                    case ArgumentException:
+                        response.StatusCode = (int)HttpStatusCode.Conflict;
+                        break;
+
+                    case UnauthorizedAccessException:
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        break;
+
                     default:
                         // Unhandled error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;

@@ -1,63 +1,69 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.DAL.Entities;
-using WorkforceManagment.Models.DTO.Requests.UserRequests;
-using WorkforceManagment.Models.DTO.Responses;
+using WorkforceManagement.Models.User;
 
 namespace WorkforceManagement.WEB.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
+        private readonly LinkGenerator _linkGenerator;
 
-        public UsersController(IUserService userService)
+
+        public UsersController(IUserService userService, IMapper mapper, LinkGenerator linkGenerator)
         {
             _userService = userService;
+            _mapper = mapper;
+            _linkGenerator = linkGenerator;
+        }
+
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<ActionResult<ViewUserModel>> Get(string userId)
+        {
+            var user = await _userService.GetUserByIdAsync(userId);
+            return _mapper.Map<ViewUserModel>(user);
         }
 
         [HttpGet]
         [Route("All")]
-        public async Task<List<UserResponseModel>> AllUsers()
+        public async Task<ViewUserModel[]> AllUsers()
         {
             List<User> allUsers = await _userService.GetAllUsersAsync();
-            List<UserResponseModel> result = new();
-            foreach (var user in allUsers)
-            {
-                result.Add(new UserResponseModel()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
-                });
-            }
-            return result;
+            return _mapper.Map<ViewUserModel[]>(allUsers);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Register(CreateUserModel model)
+        public async Task<IActionResult> Create(CreateUserModel model)
         {
-            bool userWasCreated = await _userService.CreateUserAsync
-                (model.UserName, model.Email, model.Password, model.FirstName, model.LastName, model.Role);
-            if (userWasCreated) return Ok("User was successfully registered! ");
-            return BadRequest("A User with such Email or Username already exsists! ");
+            User newUser = _mapper.Map<User>(model);
+            newUser = await _userService.CreateUserAsync(newUser, model.Password, model.Role);
+
+            string location = GenerateLocation(newUser);
+            if (string.IsNullOrWhiteSpace(location)) return BadRequest("Error at URI creation! ");
+
+            return Created(location, _mapper.Map<ViewUserModel>(newUser));
         }
 
         [HttpPut("{userId}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(EditUserModel model, string userId)
         {
-            bool userWasEdited = await _userService.EditUserAsync(userId, model.NewUserName, model.Email, model.CurrentPassword, model.NewPassword, model.FirstName, model.LastName);
-            if (userWasEdited) return Ok("User was successfully edited! ");
-            return BadRequest("A User with such Email or Username already exsists! ");
+            var userWithUpdates = _mapper.Map<User>(model);
+            userWithUpdates.Id = userId;
+            await _userService.EditUserAsync(userWithUpdates, model.CurrentPassword, model.NewPassword);
+
+            return Ok("User was successfully edited! ");
         }
 
         [HttpDelete("{userId}")]
@@ -66,6 +72,13 @@ namespace WorkforceManagement.WEB.Controllers
         {
             await _userService.DeleteUserAsync(userId);
             return Ok("User was successfully deleted! ");
+        }
+
+        private string GenerateLocation(User newUser)
+        {
+            return _linkGenerator.GetPathByAction("Get",
+                        "Users",
+                        new { userId = newUser.Id });
         }
     }
 }

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj" />
     <ProjectReference Include="..\WorkforceManagment.Models\WorkforceManagement.Models.csproj" />
   </ItemGroup>

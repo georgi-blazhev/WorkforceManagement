@@ -9,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using WorkforceManagement.BLL.Helpers;
+using WorkforceManagement.BLL.IHelpers;
 using WorkforceManagement.BLL.IServices;
 using WorkforceManagement.BLL.Services;
 using WorkforceManagement.DAL.Data;
@@ -20,6 +24,7 @@ using WorkforceManagement.WEB.Middleware;
 
 namespace WorkforceManagement.WEB
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -32,10 +37,14 @@ namespace WorkforceManagement.WEB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Register Automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Connex"]));
 
             services.AddControllers();
 
+            services.Configure<Settings>(Configuration.GetSection("Settings"));
 
             // EF Identity
             services.AddIdentityCore<User>(options =>
@@ -59,7 +68,12 @@ namespace WorkforceManagement.WEB
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITeamService, TeamService>();
             services.AddTransient<ITimeOffRequestService, TimeOffRequestService>();
-            
+            services.AddTransient<IEmailService, EmailService>();
+
+            // Register Helper implementations
+            services.AddTransient<IUserServiceHelper, UserServiceHelper>();
+            services.AddTransient<ITimeOffRequestHelper, TimeOffRequestHelper>();
+
 
             //Register Open API
             services.AddSwaggerGen(c =>
@@ -116,6 +130,9 @@ namespace WorkforceManagement.WEB
                     policyBuilder.RequireAuthenticatedUser();
                     policyBuilder.AddRequirements(new TimeOffRequestAdminOrCreatorRequirement());
                 });
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
             })
                 .AddAuthentication(options =>
                 {
@@ -125,8 +142,8 @@ namespace WorkforceManagement.WEB
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://localhost:5001";
-                    options.Audience = "https://localhost:5001/resources";
+                    options.Authority = "https://workforcemanagementapi.azurewebsites.net";
+                    options.Audience = "https://workforcemanagementapi.azurewebsites.net/resources";
                 });
 
             services.AddTransient<IAuthorizationHandler, TimeOffRequestAdminOrCreatorHandler>();
@@ -136,7 +153,6 @@ namespace WorkforceManagement.WEB
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             DatabaseSeeder.Seed(app.ApplicationServices);
-
 
             if (env.IsDevelopment())
             {

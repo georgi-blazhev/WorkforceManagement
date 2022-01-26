@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WorkforceManagement.DAL.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class UserTimeOffRequest
     {
         public string ApproverId { get; set; }
         public Guid TimeOffRequestId { get; set; }
-        public string Decision { get; set; }
+        public Decision Decision { get; set; }
+    }
+    public enum Decision
+    {
+        Unknown, Approve, Reject
     }
 }

@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WorkforceManagement.DAL.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class User : IdentityUser
     {
         public string FirstName { get; set; }
@@ -17,7 +16,6 @@ namespace WorkforceManagement.DAL.Entities
     }
     public enum Role
     {
-        Admin = 1,
-        Regular = 2
+        Admin, Regular
     }
 }

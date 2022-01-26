@@ -1,36 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WorkforceManagment.Models.DTO.Requests.UserRequests
+namespace WorkforceManagement.Models.User
 {
+    [ExcludeFromCodeCoverage]
     public class EditUserModel
     {
         [Required]
         [MinLength(5)]
         [MaxLength(50)]
-        public string NewUserName { get; set; }
+        public string UserName { get; set; }
 
         [Required]
-        [MinLength(6)]
+        [MinLength(5)]
         [MaxLength(100)]
         public string Email { get; set; }
 
         [Required]
         [MinLength(8)]
+        [MaxLength(50)]
         public string CurrentPassword { get; set; }
-
         [Required]
         [MinLength(8)]
-        public string NewPassword { get; set; }
+        [MaxLength(50)]
+        public string NewPassword { get; set; } 
 
         [Required]
+        [MinLength(2)]
+        [MaxLength(50)]
         public string FirstName { get; set; }
 
         [Required]
+        [MinLength(2)]
+        [MaxLength(50)]
         public string LastName { get; set; }
     }
 }

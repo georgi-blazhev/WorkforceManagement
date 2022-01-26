@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WorkforceManagement.DAL.Entities;
 using WorkforceManagement.BLL.IServices;
-using WorkforceManagement.Models.DTO.Requests.TeamRequests;
-using WorkforceManagement.Models.DTO.Responses;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkforceManagment.Models.DTO.Responses;
+using AutoMapper;
+using WorkforceManagement.Models.Team;
+using WorkforceManagement.DAL.Entities;
+using Microsoft.AspNetCore.Routing;
+using System;
 
 namespace WorkforceManagement.WEB.Controllers
 {
@@ -17,71 +17,54 @@ namespace WorkforceManagement.WEB.Controllers
     {
         private readonly ITeamService _teamService;
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
+        private readonly LinkGenerator _linkGenerator;
 
-        public TeamsController(ITeamService teamService, IUserService userService) : base()
+        public TeamsController(ITeamService teamService, IUserService userService, IMapper mapper, LinkGenerator linkGenerator)
         {
             _teamService = teamService;
             _userService = userService;
-    }
+            _mapper = mapper;
+            _linkGenerator = linkGenerator;
+        }
+
+        [HttpGet]
+        [Route("{teamId}")]
+        public async Task<ActionResult<ViewTeamDetailModel>> Get(string teamId)
+        {
+            var team = await _teamService.GetTeamByIdAsync(teamId);
+            return _mapper.Map<ViewTeamDetailModel>(team);
+        }
 
         [HttpGet]
         [Route("All")]
-        public async Task<List<TeamResponseModel>> GetAll()
+        public async Task<ActionResult<ViewTeamModel[]>> GetAll()
         {
             var allTeams = await _teamService.GetAllTeamsAsync();
-            List<TeamResponseModel> teamModels = new();
-
-            foreach (var team in allTeams)
-            {
-                teamModels.Add(new TeamResponseModel()
-                {
-                    Id = team.Id,
-                    Title = team.Title,
-                    Description = team.Description,
-                });
-            }
-
-            return teamModels;
-        }
-
-        [HttpGet]
-        [Route("{teamId}/Members")]
-        public async Task<List<UserResponseModel>> GetMembers(string teamId)
-        {
-            var allUsers = await _teamService.GetAllMembersOfTeam(teamId);
-            List<UserResponseModel> members = new();
-
-            foreach (var user in allUsers)
-            {
-                members.Add(new UserResponseModel()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
-                });
-            }
-
-            return members;
+            return _mapper.Map<ViewTeamModel[]>(allTeams);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTeamModel team)
+        public async Task<IActionResult> Create(CreateTeamModel model)
         {
-            var currentUser = await _userService.GetCurrentUser(User);
+            Team newTeam = _mapper.Map<Team>(model);
+            newTeam.Creator = await _userService.GetCurrentUserAsync(User);
+            newTeam = await _teamService.CreateTeamAsync(newTeam);
 
-            bool teamWasCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, team.TeamLeaderId, currentUser);
-            if (teamWasCreated) return Ok("Team was successfully created! ");
-            return BadRequest("A Team with such Title already exsists! ");
+            string location = GenerateLocation(newTeam);
+            if (string.IsNullOrWhiteSpace(location)) return BadRequest();
+
+            return Created(location, _mapper.Map<ViewTeamModel>(newTeam));
         }
 
         [HttpPut("{teamId}")]
-        public async Task<IActionResult> Edit(string teamId, EditTeamModel team)
+        public async Task<IActionResult> Edit(string teamId, EditTeamModel model)
         {
-            bool teamWasEdited = await _teamService.EditTeamAsync(teamId, team.Title, team.Description);
-            if (teamWasEdited) return Ok("Team was successfully edited! ");
-            return BadRequest("A Team with such Title already exsists! ");
+            var teamWithUpdates = _mapper.Map<Team>(model);
+            teamWithUpdates.Id = Guid.Parse(teamId);
+            await _teamService.EditTeamAsync(teamWithUpdates);
+
+            return Ok("The Team was successfully edited! ");
         }
 
         [HttpDelete("{teamId}")]
@@ -105,6 +88,21 @@ namespace WorkforceManagement.WEB.Controllers
         {
             await _teamService.UnassignUserFromTeamAsync(userId, teamId);
             return Ok("User was successfully removed from the Team! ");
+        }
+
+        [HttpPost]
+        [Route("{teamId}/AssignTL/{userId}")]
+        public async Task<IActionResult> SetTeamLeader(string userId, string teamId)
+        {
+            await _teamService.SetTeamLeader(userId, teamId);
+            return Ok("Team Lead successfully set!");
+        }
+
+        private string GenerateLocation(Team newTeam)
+        {
+            return _linkGenerator.GetPathByAction("Get",
+              "Teams",
+              new { teamId = newTeam.Id });
         }
     }
 }

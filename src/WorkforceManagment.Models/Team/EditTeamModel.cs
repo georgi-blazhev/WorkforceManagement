@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WorkforceManagement.Models.DTO.Requests.TeamRequests
+namespace WorkforceManagement.Models.Team
 {
+    [ExcludeFromCodeCoverage]
     public class EditTeamModel
     {
         [Required]
@@ -10,8 +12,8 @@ namespace WorkforceManagement.Models.DTO.Requests.TeamRequests
         public string Title { get; set; }
 
         [Required]
-        [MinLength(3)]
-        [MaxLength(200)]
+        [MinLength(5)]
+        [MaxLength(240)]
         public string Description { get; set; }
     }
 }

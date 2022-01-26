@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.WEB", "WorkforceManagement.WEB.csproj", "{3CE67B04-73D6-45D1-87CD-4C2C10AA3B1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.WEB", "WorkforceManagement.WEB\WorkforceManagement.WEB.csproj", "{3CE67B04-73D6-45D1-87CD-4C2C10AA3B1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.DAL", "..\WorkforceManagement.DAL\WorkforceManagement.DAL.csproj", "{DD0EA776-588E-40A5-912C-8920807E7F6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.DAL", "WorkforceManagement.DAL\WorkforceManagement.DAL.csproj", "{DD0EA776-588E-40A5-912C-8920807E7F6F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL", "..\WorkforeManagement.BLL\WorkforceManagement.BLL.csproj", "{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL", "WorkforeManagement.BLL\WorkforceManagement.BLL.csproj", "{0E196A56-7A86-4EEE-8314-A7357CBAA7BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{858ABE1C-4F85-41CA-9740-DD5E548C024D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL.UnitTests", "..\WorkforceManagment.BLL.UnitTests\WorkforceManagement.BLL.UnitTests.csproj", "{DBDECA93-8FE3-4D78-BEC8-92046197668C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.BLL.UnitTests", "WorkforceManagment.BLL.UnitTests\WorkforceManagement.BLL.UnitTests.csproj", "{DBDECA93-8FE3-4D78-BEC8-92046197668C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.Models", "..\WorkforceManagment.Models\WorkforceManagement.Models.csproj", "{2D217EA3-FA58-4B57-A612-17D1BDD550BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.Models", "WorkforceManagment.Models\WorkforceManagement.Models.csproj", "{2D217EA3-FA58-4B57-A612-17D1BDD550BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagement.WEB.UnitTests", "WorkforceManagement.WEB.UnitTests\WorkforceManagement.WEB.UnitTests.csproj", "{529D4883-3952-4E8D-8A5E-2F663B916ED9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +43,17 @@ Global
 		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D217EA3-FA58-4B57-A612-17D1BDD550BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{529D4883-3952-4E8D-8A5E-2F663B916ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{529D4883-3952-4E8D-8A5E-2F663B916ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{529D4883-3952-4E8D-8A5E-2F663B916ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{529D4883-3952-4E8D-8A5E-2F663B916ED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DBDECA93-8FE3-4D78-BEC8-92046197668C} = {858ABE1C-4F85-41CA-9740-DD5E548C024D}
+		{529D4883-3952-4E8D-8A5E-2F663B916ED9} = {858ABE1C-4F85-41CA-9740-DD5E548C024D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C55EF02B-4352-4278-BCFD-F9239D2FDB9A}

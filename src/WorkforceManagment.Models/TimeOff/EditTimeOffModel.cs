@@ -1,21 +1,23 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using WorkforceManagement.DAL.Entities;
+using System.Diagnostics.CodeAnalysis;
 
-namespace WorkforceManagement.Models.DTO.Requests.TimeOffRequests
+namespace WorkforceManagement.Models.TimeOff
 {
+    [ExcludeFromCodeCoverage]
     public class EditTimeOffModel
     {
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime StartDate { get; set; }
 
         [Required]
-        public TimeOffRequestType Type { get; set; }
-        [Required]
-        public DateTime StartDate { get; set; }
-        [Required]
+        [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
+
         [Required]
-        [MaxLength(200)]
+        [MinLength(10)]
+        [MaxLength(240)]
         public string Reason { get; set; }
     }
 }
-

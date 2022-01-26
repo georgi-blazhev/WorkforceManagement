@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
@@ -20,101 +19,87 @@ namespace WorkforceManagement.BLL.Services
             _userManager = userManager;
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description, string teamLeaderId, User currentUser)
+        public async Task<Team> GetTeamByIdAsync(string teamId)
         {
-            var team =  _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
-            if (team != null) return false;
-
-            var teamLeader = await _userManager.FindByIdAsync(teamLeaderId); //TODO: Can anyone be a TeamLeader?
-            if (teamLeader == null) return false;
-
-            await _teamRepository.CreateAsync(new Team() 
-            {
-                Title = title, 
-                Description = description,
-                CreatedAt = DateTime.Now,
-                LastChange = DateTime.Now,
-                TeamLeader = teamLeader,
-                Creator = currentUser
-            });
-            return true;
+            return await _teamRepository.FindByIdAsync(teamId);
         }
-
-        public async Task<bool> EditTeamAsync(string id, string title, string description)
-        {
-            var teamToEdit = _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
-            if (teamToEdit != null) return false;
-
-            teamToEdit = await _teamRepository.FindByIdAsync(id);
-            teamToEdit.Title = title;
-            teamToEdit.Description = description;
-
-            _teamRepository.Edit(teamToEdit);
-            return true;
-        }
-
-        public async Task DeleteTeamAsync(string id)
-        {
-            var team = await _teamRepository.FindByIdAsync(id);
-            _teamRepository.Delete(team);
-        }
-
-        public async Task AssignUserToTeamAsync(string userId, string teamId)
-        {
-            var team = await _teamRepository.FindByIdAsync(teamId);
-            var user = await _userManager.FindByIdAsync(userId);
-
-            await _teamRepository.AssignUserToTeamAsync(user, team);
-        }
-
-        public async Task UnassignUserFromTeamAsync(string userId, string teamId)
-        {
-            var team = await _teamRepository.FindByIdAsync(teamId);
-            var user = await _userManager.FindByIdAsync(userId);
-
-            await _teamRepository.UnssignUserToTeamAsync(user, team);
-        }
-
-        public async Task<Team> GetTeamByIdAsync(string id)
-        {
-            return await _teamRepository.FindByIdAsync(id);
-        }
-
-        public Team GetTeamByTitleAsync(string title)
-        {
-            return _teamRepository.FindAsync(t => t.Title == title).Result.FirstOrDefault();
-        }
-
         public async Task<List<Team>> GetAllTeamsAsync()
         {
             return await _teamRepository.GetAllAsync();
         }
-
-        public async Task<List<User>> GetAllMembersOfTeam(string id)
+        public async Task<Team> CreateTeamAsync(Team newTeam)
         {
-            Team team = await _teamRepository.FindByIdAsync(id);
+            var team = _teamRepository.FindAsync(t => t.Title == newTeam.Title).Result.FirstOrDefault();
+            if (team != null) 
+                throw new ArgumentException("A team with such Title already exists! ");
 
-            return team.Members;
+            var teamLeader = await _userManager.FindByIdAsync(newTeam.TeamLeaderId);
+            if (_teamRepository.FindAsync(t => t.TeamLeaderId == teamLeader.Id).Result.Any())
+                throw new ArgumentException("This user is already a Team Leader of another team");
+
+            newTeam.CreatedAt = DateTime.Now;
+            newTeam.LastChange = DateTime.Now;
+            newTeam.TeamLeader = teamLeader;
+            newTeam.Members = new List<User> { teamLeader };
+
+            await _teamRepository.CreateAsync(newTeam);
+            return _teamRepository.FindAsync(t => t.Title == newTeam.Title).Result.FirstOrDefault();
         }
-
-        public async Task<User> GetTeamLeadOfTeamAsync(string id)
+        public async Task EditTeamAsync(Team teamWithUpdates)
         {
-            Team team = await _teamRepository.FindByIdAsync(id);
+            var teamToEdit = _teamRepository.FindAsync(t => t.Title == teamWithUpdates.Title).Result.FirstOrDefault();
+            if (teamToEdit != null && teamToEdit.Id != teamWithUpdates.Id)
+                throw new ArgumentException("A team with such Title already exists! ");
 
-            return team.TeamLeader;
+            teamToEdit = await _teamRepository.FindByIdAsync(teamWithUpdates.Id.ToString());
+            
+            teamToEdit.Title = teamWithUpdates.Title;
+            teamToEdit.Description = teamWithUpdates.Description;
+            teamToEdit.LastChange = DateTime.Now;
+
+            await _teamRepository.EditAsync(teamToEdit);
         }
-
-        public async Task<bool> CheckUserAccessAsync(User user, string teamId)
+        public async Task DeleteTeamAsync(string teamId)
         {
-            var currentUserRoles = await _userManager.GetUserRolesAsync(user);
             var team = await _teamRepository.FindByIdAsync(teamId);
+            await _teamRepository.DeleteAsync(team);
+        }
+        public async Task AssignUserToTeamAsync(string userId, string teamId)
+        {
+            var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (team.Members.Contains(user))
+                throw new ArgumentException("This user is already a part of this team");
 
-            if (team.Members.Contains(user) || currentUserRoles.Contains("admin"))
-            {
-                return true;
-            }
+            team.LastChange = DateTime.Now;
 
-            return false;
+            await _teamRepository.AssignUserToTeamAsync(user, team);
+        }
+        public async Task UnassignUserFromTeamAsync(string userId, string teamId)
+        {
+            var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (!team.Members.Contains(user))
+                throw new ArgumentException("This user is not a part of this team");
+
+            if (team.TeamLeaderId == user.Id)
+                throw new ArgumentException("This user is the Team Lead of this team");
+
+            team.LastChange = DateTime.Now;
+
+            await _teamRepository.UnssignUserToTeamAsync(user, team);
+        }
+        public async Task SetTeamLeader(string userId, string teamId)
+        {
+            var team = await _teamRepository.FindByIdAsync(teamId);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (_teamRepository.FindAsync(t => t.TeamLeaderId == user.Id).Result.Any())
+                throw new ArgumentException("This user is already a Team Leader of another team");
+
+            team.Members.Add(user);
+            team.LastChange = DateTime.Now;
+
+            await _teamRepository.AssignNewTeamLead(user, team);
         }
     }
 }

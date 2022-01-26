@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
@@ -11,6 +11,7 @@ using WorkforceManagement.DAL.Entities;
 
 namespace WorkforceManagement.WEB.AuthorizationPolicies
 {
+    [ExcludeFromCodeCoverage]
     public class TimeOffRequestAdminOrCreatorHandler : AuthorizationHandler<TimeOffRequestAdminOrCreatorRequirement>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

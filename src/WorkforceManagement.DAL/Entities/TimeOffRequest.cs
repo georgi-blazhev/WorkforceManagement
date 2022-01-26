@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WorkforceManagement.DAL.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class TimeOffRequest : AbstractEntity
     {
         public TimeOffRequestType Type { get; set; }
@@ -14,6 +13,7 @@ namespace WorkforceManagement.DAL.Entities
         public string Reason { get; set; }
         public Status Status { get; set; }
         public virtual List<User> Approvers { get; set; }
+        public virtual List<DayOff> DaysOff { get; set; } 
     }
 
     public enum TimeOffRequestType

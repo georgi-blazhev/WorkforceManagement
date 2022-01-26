@@ -3,23 +3,26 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Collections.Generic;
 using WorkforceManagement.BLL.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WorkforceManagement.WEB.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : Controller
+    [AllowAnonymous]
+    [Route("api/[controller]")]
+    public class GetTokenController : Controller
     {
         private readonly IUserService _userService;
-        static HttpClient client = new();
+        private readonly HttpClient _client;
 
-        public LoginController(IUserService userService)
+        public GetTokenController(IUserService userService, HttpClient client)
         {
             _userService = userService;
+            _client = client;
         }
 
         [HttpPost]
-        public async Task<string> Login(string usernameOrEmail, string password)
+        public async Task<string> GetToken(string usernameOrEmail, string password)
         {
             var username = await GetUsernameAsync(usernameOrEmail);
 
@@ -34,7 +37,7 @@ namespace WorkforceManagement.WEB.Controllers
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage response = await client.PostAsync("https://localhost:5001/connect/token", content);
+            HttpResponseMessage response = await _client.PostAsync("https://workforcemanagementapi.azurewebsites.net/connect/token", content);
 
             return await response.Content.ReadAsStringAsync();
         }

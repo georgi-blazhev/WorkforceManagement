@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WorkforceManagement.DAL.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class Team : AbstractEntity
     {
         public string Title { get; set; }

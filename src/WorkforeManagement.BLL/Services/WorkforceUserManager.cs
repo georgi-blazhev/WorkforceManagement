@@ -6,10 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagement.BLL.IServices;
-using WorkforceManagement.DAL.Data;
 using WorkforceManagement.DAL.Entities;
 
 namespace WorkforceManagement.BLL.Services
@@ -43,27 +41,27 @@ namespace WorkforceManagement.BLL.Services
         {
             return await Users.ToListAsync();
         }
-        public async Task<List<string>> GetUserRolesAsync(User user)
-        {
-            return (await GetRolesAsync(user)).ToList();
-        }
-        public async Task CreateUserAsync(User user, string password)
-        {
-            await CreateAsync(user, password);
-        }
         public async Task<User> GetCurrentUser(ClaimsPrincipal principal)
         {
             return await Users.FirstOrDefaultAsync(u => u.UserName == principal.Identities.ToList()[0].Name);            
         }
-        public async Task<User> UpdateUserAsync(User user, string currentPassword, string newPassword)
+        public async Task<User> CreateUserAsync(User user, string password)
         {
-            await ChangePasswordAsync(user, currentPassword, newPassword);
+            await CreateAsync(user, password);
+            return await FindByNameAsync(user.UserName);
+        }
+        public async Task UpdateUserAsync(User user, string currentPassword, string newPassword)
+        {
             await UpdateAsync(user);
-            return user;
+            await ChangePasswordAsync(user, currentPassword, newPassword);
         }
         public async Task DeleteUserAsync(User user)
         {
             await DeleteAsync(user);
+        }
+        public async Task<List<string>> GetUserRolesAsync(User user)
+        {
+            return (await GetRolesAsync(user)).ToList();
         }
         public async Task<bool> ValidateUserCredentialsAsync(string userName, string password)
         {
